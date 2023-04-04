@@ -16,6 +16,12 @@ const instanceNormal = () => {
   })
 }
 
+// const _postFile = (url, data) => {
+//   let header = {
+//     'Content-Type': 'multipart/form-data'
+//   }
+// }
+
 const _get = (url, config) => {
   return new Promise((resolve, reject) => {
     instanceNormal()

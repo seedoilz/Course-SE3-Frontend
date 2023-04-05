@@ -1,16 +1,16 @@
 <template>
   <div>
-    <el-row>
-      <el-col :span="8">
+    <el-row class="el-row">
+      <el-col :span="8" class="el-col">
         <div class="grid-content bg-purple">
           请输入文本
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" class="el-col">
         <div class="grid-content bg-purple-light">
-          <el-input id="text-input" placeholder="请输入待检测文本" v-model="text"></el-input>
-          <el-input id="keyword-input" placeholder="请输入关键词" v-model="keyword"></el-input>
-          <el-select v-model="select" placeholder="请选择检测版本">
+          <el-input class="text-item" placeholder="请输入待检测文本" v-model="text"></el-input>
+          <el-input class="text-item" placeholder="请输入关键词" v-model="keyword"></el-input>
+          <el-select class="text-item" v-model="select" placeholder="请选择检测版本">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -18,28 +18,29 @@
               :value="item.value">
             </el-option>
           </el-select>
-          <el-button @click="getTextScore">开始检测</el-button>
+          <el-button @click="getTextScore" type="primary" plain>开始检测</el-button>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" class="el-col">
         <div class="grid-content bg-purple">
-          {{data_text}}
+          {{ text_score }}
         </div>
       </el-col>
     </el-row>
 
-    <el-row>
-      <el-col :span="8">
+    <el-row class="el-row">
+      <el-col :span="8" class="el-col">
         <div class="grid-content bg-purple">
           请上传文件
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" class="el-col">
         <div class="grid-content bg-purple-light">
           <el-upload
-            class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            class="file-upload"
+            action="action"
             :on-preview="handlePreview"
+            :http-request="fileUpload"
             :on-success="getFileScore"
             multiple
             :limit="1"
@@ -47,11 +48,12 @@
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传txt文件，且不超过500kb</div>
           </el-upload>
+          <el-button @click="getFileScore" type="primary" plain>开始检测</el-button>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" class="el-col">
         <div class="grid-content bg-purple">
-          {{data_file}}
+          {{ file_score }}
         </div>
       </el-col>
     </el-row>
@@ -59,14 +61,15 @@
 </template>
 
 <script>
-import {analyzeText, analyzeFile} from '@/network/main'
+import {analyzeText} from '@/network/main'
+import axios from 'axios'
 
 export default {
   name: 'MainView',
   data () {
     return {
-      data_text: '',
-      data_file: '',
+      text_score: '',
+      file_score: '',
       text: '',
       file: '',
       select: 'trinary',
@@ -77,7 +80,9 @@ export default {
         value: 'binary'
       }, {
         value: 'scale'
-      }]
+      }],
+      action: 'http://124.70.198.102:3456',
+      mode: {}
     }
   },
   mounted () {
@@ -87,62 +92,76 @@ export default {
       console.log(this.text, this.keyword, this.select)
       analyzeText(this.text).then(res => {
         if (res.code === 200) {
-          this.data_text = res.data
+          this.text_score = res.data
         } else {
           console.log(res.message)
         }
       })
     },
-    getFileScore (file) {
-      console.log(file)
-      console.log('file', this.file)
-      analyzeFile(this.file).then(res => {
-        if (res.code === 200) {
-          this.data_file = res.data
-        } else {
-          console.log(res.message)
+    getFileScore () {
+      console.log('this.file', this.file)
+      let fd = new FormData()
+      fd.append('file', this.file)
+      console.log('fd', fd)
+      axios.post('http://124.70.198.102:3456/text/file', fd, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
         }
+      }).then(response => {
+        if (response.status === 200) {
+          console.log('res', response)
+          // 需要将数据转换为文件
+          // this.file_score = response.data
+          this.file_score = 'success'
+          const blob = new Blob([response.data], {type: response.headers['content-type']})
+          const url = window.URL.createObjectURL(blob)
+          const link = document.createElement('a')
+          link.href = url
+          link.download = 'result.txt'
+          link.click()
+        } else {
+          console.log('fail')
+        }
+      }).catch(error => {
+        console.log(error)
       })
+    },
+    fileUpload (item) {
+      this.file = item.file
+      this.mode = item.file
+      // console.log('this.file', this.file)
+      // console.log('item.file', item.file)
     },
     handlePreview (file) {
-      console.log(file)
     }
   }
 }
 </script>
 
 <style scoped>
-el-row {
-  height: 500px;
+.el-row {
+  height: 400px;
   width: 100%;
+  margin-bottom: 10px;
 }
-el-col {
+.el-col {
   border-radius: 4px;
-  height: 500px;
+  height: 60%;
   align-content: center;
-  padding-bottom: 15px;
-  padding-top: 15px;
-  width: 70%;
+  display: table;
 }
 el-upload {
   width: 80px;
   height: 80px;
   align-content: center;
 }
-.el-icon-upload{
-  width: 80px;
-  height: auto;
-  align-content: center;
-}
-.el-upload__text {
-  width: 80%;
-  height: 80%;
-  align-content: center;
-}
 .el-upload__tip {
   width: 80%;
   height: 80%;
   align-content: center;
+  text-align: center;
+  margin-left: 10%;
+  margin-bottom: 10px;
 }
 bg-purple-dark {
   background: #99a9bf;
@@ -156,16 +175,18 @@ bg-purple-dark {
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
-  align-content: center;
   text-align: center;
-  height: auto;
-  margin-bottom: 15px;
-  margin-top: 15px;
+  vertical-align: middle;
+  display: table-cell;
+  height: 80%;
   padding: 15px 50px;
   width: 50%;
 }
-.row-bg {
-  padding: 10px 0;
-  background-color: #f9fafc;
+.text-item {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.file-upload {
+  text-align: center;
 }
 </style>

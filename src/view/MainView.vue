@@ -110,14 +110,16 @@ export default {
       }).then(response => {
         if (response.status === 200) {
           console.log('res', response)
-          // 需要将数据转换为文件
-          // this.file_score = response.data
           this.file_score = 'success'
+          // 创建一个Blob对象
           const blob = new Blob([response.data], {type: response.headers['content-type']})
+          // 创建一个URL对象
           const url = window.URL.createObjectURL(blob)
+          // 创建一个a标签
           const link = document.createElement('a')
           link.href = url
           link.download = 'result.txt'
+          // 模拟点击a标签
           link.click()
         } else {
           console.log('fail')

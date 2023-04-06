@@ -86,11 +86,12 @@ export default {
     }
   },
   mounted () {
-    this.setOption()
+    this.setCorpus()
   },
   methods: {
     getTextScore () {
       console.log(this.text, this.keyword, this.select)
+      this.setCorpus()
       analyzeText(this.text).then(res => {
         if (res.code === 200) {
           this.text_score = res.data
@@ -137,7 +138,7 @@ export default {
     },
     handlePreview (file) {
     },
-    setOption () {
+    setCorpus () {
       let options = ['scale', 'a']
       axios.post('http://124.70.198.102:3456/text/corpus?' + options.map(s => {
         return 'options=' + s

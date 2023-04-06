@@ -3,3 +3,4 @@ let API = require('@/apis')
 
 export const analyzeText = (data) => request._post(API.ANALYZE_BASIC, data)
 export const analyzeFile = (data) => request._post(API.ANALYZE_FILE, data)
+export const corpusOption = (config) => request._post(API.CORPUS_OPTION, null, config)

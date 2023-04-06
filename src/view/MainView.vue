@@ -86,6 +86,7 @@ export default {
     }
   },
   mounted () {
+    this.setOption()
   },
   methods: {
     getTextScore () {
@@ -135,6 +136,14 @@ export default {
       // console.log('item.file', item.file)
     },
     handlePreview (file) {
+    },
+    setOption () {
+      let options = ['scale', 'a']
+      axios.post('http://124.70.198.102:3456/text/corpus?' + options.map(s => {
+        return 'options=' + s
+      }).join('&')).then(res => {
+        console.log(res)
+      })
     }
   }
 }

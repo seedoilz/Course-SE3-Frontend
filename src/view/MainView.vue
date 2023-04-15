@@ -57,12 +57,40 @@
         </div>
       </el-col>
     </el-row>
+
+    <el-checkbox-group
+      v-model="optionsList"
+      :min="0"
+      :max="200">
+      <el-checkbox-button class="checkboxParam" v-for="param in params" :label="param" :key="param">{{param}}</el-checkbox-button>
+    </el-checkbox-group>
+    <el-button @click="getOptionsList" type="primary" plain style="margin-bottom: 10px; margin-top: 10px">检测</el-button>
+
+    <br>
+    <el-input class="inputParam" v-model="wordsBeforeKeywords" placeholder="wordsBeforeKeywords"></el-input>
+    <el-input class="inputParam" v-model="wordsAfterKeywords" placeholder="wordsAfterKeywords"></el-input>
+    <el-input class="inputParam" v-model="negativeMultiplier" placeholder="negativeMultiplier"></el-input>
+    <el-input class="inputParam" v-model="minPunctuationWithExclamation" placeholder="minPunctuationWithExclamation"></el-input>
+    <el-input class="inputParam" v-model="mood" placeholder="mood"></el-input>
+    <el-input class="inputParam" v-model="illegalDoubleLettersInWordMiddle" placeholder="illegalDoubleLettersInWordMiddle"></el-input>
+    <el-input class="inputParam" v-model="illegalDoubleLettersAtWordEnd" placeholder="illegalDoubleLettersAtWordEnd"></el-input>
+    <el-input class="inputParam" v-model="negatedWordStrengthMultiplier" placeholder="negatedWordStrengthMultiplier"></el-input>
+    <el-input class="inputParam" v-model="maxWordsBeforeSentimentToNegate" placeholder="maxWordsBeforeSentimentToNegate"></el-input>
+    <el-input class="inputParam" v-model="maxWordsAfterSentimentToNegate" placeholder="maxWordsAfterSentimentToNegate"></el-input>
+    <el-input class="inputParam" v-model="MinSentencePosForQuotesIrony" placeholder="MinSentencePosForQuotesIrony"></el-input>
+    <el-input class="inputParam" v-model="MinSentencePosForPunctuationIrony" placeholder="MinSentencePosForPunctuationIrony"></el-input>
+    <el-input class="inputParam" v-model="MinSentencePosForTermsIrony" placeholder="MinSentencePosForTermsIrony"></el-input>
+    <el-input class="inputParam" v-model="MinSentencePosForAllIrony" placeholder="MinSentencePosForAllIrony"></el-input>
   </div>
 </template>
 
 <script>
 import {analyzeText} from '@/network/main'
 import axios from 'axios'
+const optionsParam = ['noBoosters', 'noNegatingPositiveFlipsEmotion', 'noNegatingNegativeNeutralisesEmotion', 'noNegators', 'noIdioms',
+  'questionsReduceNeg', 'noEmoticons', 'exclamations2', 'noMultiplePosWords', 'noMultipleNegWords', 'noIgnoreBoosterWordsAfterNegatives',
+  'noDictionary', 'noDeleteExtraDuplicateLetters', 'noMultipleLetters', 'negatingWordsDontOccurBeforeSentiment', 'negatingWordsOccurAfterSentiment',
+  'alwaysSplitWordsAtApostrophes', 'capitalsBoostTermSentiment', 'explain', 'echo', 'UTF8']
 
 export default {
   name: 'MainView',
@@ -82,13 +110,36 @@ export default {
         value: 'scale'
       }],
       action: 'http://124.70.198.102:3456',
-      mode: {}
+      mode: {},
+      params: optionsParam,
+      optionsList: [],
+      wordsBeforeKeywords: '',
+      wordsAfterKeywords: '',
+      negativeMultiplier: '',
+      minPunctuationWithExclamation: '',
+      mood: '',
+      illegalDoubleLettersInWordMiddle: '',
+      illegalDoubleLettersAtWordEnd: '',
+      negatedWordStrengthMultiplier: '',
+      maxWordsBeforeSentimentToNegate: '',
+      maxWordsAfterSentimentToNegate: '',
+      MinSentencePosForQuotesIrony: '',
+      MinSentencePosForPunctuationIrony: '',
+      MinSentencePosForTermsIrony: '',
+      MinSentencePosForAllIrony: ''
     }
   },
   mounted () {
-    this.setCorpus()
   },
   methods: {
+    getOptionsList () {
+      // let a = this.optionsList[0]
+      // console.log(a)
+      // console.log(this.optionsList)
+      console.log(this.wordsBeforeKeywords)
+      this.wordsBeforeKeywords = 3
+      console.log(this.wordsBeforeKeywords)
+    },
     getTextScore () {
       console.log(this.text, this.keyword, this.select)
       this.setCorpus()
@@ -101,6 +152,7 @@ export default {
       })
     },
     getFileScore () {
+      this.setCorpus()
       console.log('this.file', this.file)
       let fd = new FormData()
       fd.append('file', this.file)
@@ -200,5 +252,14 @@ bg-purple-dark {
 }
 .file-upload {
   text-align: center;
+}
+.inputParam {
+  margin-bottom: 10px;
+  width: 50%;
+  /*border: solid 1px  cornflowerblue;*/
+  border-radius: 10px;
+}
+.checkboxParam {
+  margin-bottom: 10px;
 }
 </style>

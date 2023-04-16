@@ -1,5 +1,46 @@
 <template>
   <div>
+    <el-checkbox-group
+      v-model="optionsList"
+      :min="0"
+      :max="200">
+      <el-checkbox-button class="checkboxParam" v-for="param in params" :label="param" :key="param">{{param}}</el-checkbox-button>
+    </el-checkbox-group>
+    <el-input class="inputParam" v-model="wordsBeforeKeywords" placeholder="wordsBeforeKeywords"></el-input>
+    <el-input class="inputParam" v-model="wordsAfterKeywords" placeholder="wordsAfterKeywords"></el-input>
+    <el-input class="inputParam" v-model="negativeMultiplier" placeholder="negativeMultiplier"></el-input>
+    <el-input class="inputParam" v-model="minPunctuationWithExclamation" placeholder="minPunctuationWithExclamation"></el-input>
+    <el-input class="inputParam" v-model="mood" placeholder="mood"></el-input>
+    <el-input class="inputParam" v-model="illegalDoubleLettersInWordMiddle" placeholder="illegalDoubleLettersInWordMiddle"></el-input>
+    <el-input class="inputParam" v-model="illegalDoubleLettersAtWordEnd" placeholder="illegalDoubleLettersAtWordEnd"></el-input>
+    <el-input class="inputParam" v-model="negatedWordStrengthMultiplier" placeholder="negatedWordStrengthMultiplier"></el-input>
+    <el-input class="inputParam" v-model="maxWordsBeforeSentimentToNegate" placeholder="maxWordsBeforeSentimentToNegate"></el-input>
+    <el-input class="inputParam" v-model="maxWordsAfterSentimentToNegate" placeholder="maxWordsAfterSentimentToNegate"></el-input>
+    <el-input class="inputParam" v-model="MinSentencePosForQuotesIrony" placeholder="MinSentencePosForQuotesIrony"></el-input>
+    <el-input class="inputParam" v-model="MinSentencePosForPunctuationIrony" placeholder="MinSentencePosForPunctuationIrony"></el-input>
+    <el-input class="inputParam" v-model="MinSentencePosForTermsIrony" placeholder="MinSentencePosForTermsIrony"></el-input>
+    <el-input class="inputParam" v-model="MinSentencePosForAllIrony" placeholder="MinSentencePosForAllIrony"></el-input>
+
+    <el-select class="inputParam" v-model="select" placeholder="请选择检测版本">
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.value"
+        :value="item.value">
+      </el-option>
+    </el-select>
+    <br>
+    <el-radio v-model="param1" label="sentiment">sentiment</el-radio>
+    <el-radio v-model="param1" label="stress">stress</el-radio>
+    <br>
+    <el-radio v-model="param2" label="sentenceCombineAv">sentenceCombineAv</el-radio>
+    <el-radio v-model="param2" label="sentenceCombineTot">sentenceCombineTot</el-radio>
+    <br>
+    <el-radio v-model="param3" label="paragraphCombineAv">paragraphCombineAv</el-radio>
+    <el-radio v-model="param3" label="paragraphCombineTot">paragraphCombineTot</el-radio>
+    <br>
+
+    <el-button @click="setCorpus" type="primary" plain style="margin-bottom: 10px; margin-top: 10px">创建语料库</el-button>
     <el-row class="el-row">
       <el-col :span="8" class="el-col">
         <div class="grid-content bg-purple">
@@ -10,14 +51,7 @@
         <div class="grid-content bg-purple-light">
           <el-input class="text-item" placeholder="请输入待检测文本" v-model="text"></el-input>
           <el-input class="text-item" placeholder="请输入关键词" v-model="keyword"></el-input>
-          <el-select class="text-item" v-model="select" placeholder="请选择检测版本">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.value"
-              :value="item.value">
-            </el-option>
-          </el-select>
+          <br>
           <el-button @click="getTextScore" type="primary" plain>开始检测</el-button>
         </div>
       </el-col>
@@ -57,30 +91,6 @@
         </div>
       </el-col>
     </el-row>
-
-    <el-checkbox-group
-      v-model="optionsList"
-      :min="0"
-      :max="200">
-      <el-checkbox-button class="checkboxParam" v-for="param in params" :label="param" :key="param">{{param}}</el-checkbox-button>
-    </el-checkbox-group>
-    <el-button @click="getOptionsList" type="primary" plain style="margin-bottom: 10px; margin-top: 10px">检测</el-button>
-
-    <br>
-    <el-input class="inputParam" v-model="wordsBeforeKeywords" placeholder="wordsBeforeKeywords"></el-input>
-    <el-input class="inputParam" v-model="wordsAfterKeywords" placeholder="wordsAfterKeywords"></el-input>
-    <el-input class="inputParam" v-model="negativeMultiplier" placeholder="negativeMultiplier"></el-input>
-    <el-input class="inputParam" v-model="minPunctuationWithExclamation" placeholder="minPunctuationWithExclamation"></el-input>
-    <el-input class="inputParam" v-model="mood" placeholder="mood"></el-input>
-    <el-input class="inputParam" v-model="illegalDoubleLettersInWordMiddle" placeholder="illegalDoubleLettersInWordMiddle"></el-input>
-    <el-input class="inputParam" v-model="illegalDoubleLettersAtWordEnd" placeholder="illegalDoubleLettersAtWordEnd"></el-input>
-    <el-input class="inputParam" v-model="negatedWordStrengthMultiplier" placeholder="negatedWordStrengthMultiplier"></el-input>
-    <el-input class="inputParam" v-model="maxWordsBeforeSentimentToNegate" placeholder="maxWordsBeforeSentimentToNegate"></el-input>
-    <el-input class="inputParam" v-model="maxWordsAfterSentimentToNegate" placeholder="maxWordsAfterSentimentToNegate"></el-input>
-    <el-input class="inputParam" v-model="MinSentencePosForQuotesIrony" placeholder="MinSentencePosForQuotesIrony"></el-input>
-    <el-input class="inputParam" v-model="MinSentencePosForPunctuationIrony" placeholder="MinSentencePosForPunctuationIrony"></el-input>
-    <el-input class="inputParam" v-model="MinSentencePosForTermsIrony" placeholder="MinSentencePosForTermsIrony"></el-input>
-    <el-input class="inputParam" v-model="MinSentencePosForAllIrony" placeholder="MinSentencePosForAllIrony"></el-input>
   </div>
 </template>
 
@@ -100,7 +110,7 @@ export default {
       file_score: '',
       text: '',
       file: '',
-      select: 'trinary',
+      select: 'scale',
       keyword: '',
       options: [{
         value: 'trinary'
@@ -126,22 +136,17 @@ export default {
       MinSentencePosForQuotesIrony: '',
       MinSentencePosForPunctuationIrony: '',
       MinSentencePosForTermsIrony: '',
-      MinSentencePosForAllIrony: ''
+      MinSentencePosForAllIrony: '',
+      param1: '',
+      param2: '',
+      param3: ''
     }
   },
   mounted () {
   },
   methods: {
-    getOptionsList () {
-      // let a = this.optionsList[0]
-      // console.log(a)
-      // console.log(this.optionsList)
-      console.log(this.wordsBeforeKeywords)
-      this.wordsBeforeKeywords = 3
-      console.log(this.wordsBeforeKeywords)
-    },
     getTextScore () {
-      console.log(this.text, this.keyword, this.select)
+      // console.log(this.text, this.keyword, this.select)
       this.setCorpus()
       analyzeText(this.text).then(res => {
         if (res.code === 200) {
@@ -191,12 +196,63 @@ export default {
     handlePreview (file) {
     },
     setCorpus () {
-      let options = ['scale', 'a']
+      let options = []
+      options = this.getOptions(options)
+      options.push(this.select, this.param1, this.param2, this.param3)
+      console.log(options)
       axios.post('http://124.70.198.102:3456/text/corpus?' + options.map(s => {
         return 'options=' + s
       }).join('&')).then(res => {
         console.log(res)
       })
+    },
+    getOptions (options) {
+      options = options.concat(this.optionsList)
+
+      if (this.wordsBeforeKeywords !== '') {
+        options.push('wordsBeforeKeywords', this.wordsBeforeKeywords)
+      }
+      if (this.wordsAfterKeywords !== '') {
+        options.push('wordsAfterKeywords', this.wordsAfterKeywords)
+      }
+      if (this.negativeMultiplier !== '') {
+        options.push('negativeMultiplier', this.negativeMultiplier)
+      }
+      if (this.minPunctuationWithExclamation !== '') {
+        options.push('minPunctuationWithExclamation', this.minPunctuationWithExclamation)
+      }
+      if (this.mood !== '') {
+        options.push('mood', this.mood)
+      }
+      if (this.illegalDoubleLettersInWordMiddle !== '') {
+        options.push('illegalDoubleLettersInWordMiddle', this.illegalDoubleLettersInWordMiddle)
+      }
+      if (this.illegalDoubleLettersAtWordEnd !== '') {
+        options.push('illegalDoubleLettersAtWordEnd', this.illegalDoubleLettersAtWordEnd)
+      }
+      if (this.negatedWordStrengthMultiplier !== '') {
+        options.push('negatedWordStrengthMultiplier', this.negatedWordStrengthMultiplier)
+      }
+      if (this.maxWordsBeforeSentimentToNegate !== '') {
+        options.push('maxWordsBeforeSentimentToNegate', this.maxWordsBeforeSentimentToNegate)
+      }
+      if (this.maxWordsAfterSentimentToNegate !== '') {
+        options.push('maxWordsAfterSentimentToNegate', this.maxWordsAfterSentimentToNegate)
+      }
+      if (this.MinSentencePosForQuotesIrony !== '') {
+        options.push('MinSentencePosForQuotesIrony', this.MinSentencePosForQuotesIrony)
+      }
+      if (this.MinSentencePosForPunctuationIrony !== '') {
+        options.push('MinSentencePosForPunctuationIrony', this.MinSentencePosForPunctuationIrony)
+      }
+      if (this.MinSentencePosForTermsIrony !== '') {
+        options.push('MinSentencePosForTermsIrony', this.MinSentencePosForTermsIrony)
+      }
+      if (this.MinSentencePosForAllIrony !== '') {
+        options.push('MinSentencePosForAllIrony', this.MinSentencePosForAllIrony)
+      }
+
+      return options
     }
   }
 }
@@ -227,9 +283,6 @@ el-upload {
   margin-left: 10%;
   margin-bottom: 10px;
 }
-bg-purple-dark {
-  background: #99a9bf;
-}
 .bg-purple {
   background: #d3dce6;
 }
@@ -247,7 +300,7 @@ bg-purple-dark {
   width: 50%;
 }
 .text-item {
-  width: 100%;
+  width: 50%;
   margin-bottom: 10px;
 }
 .file-upload {

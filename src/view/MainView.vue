@@ -30,14 +30,20 @@
       </el-option>
     </el-select>
     <br>
-    <el-radio v-model="param1" label="sentiment">sentiment</el-radio>
-    <el-radio v-model="param1" label="stress">stress</el-radio>
+    <div>
+      <el-radio v-model="param1" label="sentiment" border>sentiment</el-radio>
+      <el-radio v-model="param1" label="stress" border>stress</el-radio>
+    </div>
     <br>
-    <el-radio v-model="param2" label="sentenceCombineAv">sentenceCombineAv</el-radio>
-    <el-radio v-model="param2" label="sentenceCombineTot">sentenceCombineTot</el-radio>
+    <div>
+      <el-radio v-model="param2" label="sentenceCombineAv" border>sentenceCombineAv</el-radio>
+      <el-radio v-model="param2" label="sentenceCombineTot" border>sentenceCombineTot</el-radio>
+    </div>
     <br>
-    <el-radio v-model="param3" label="paragraphCombineAv">paragraphCombineAv</el-radio>
-    <el-radio v-model="param3" label="paragraphCombineTot">paragraphCombineTot</el-radio>
+    <div>
+      <el-radio v-model="param3" label="paragraphCombineAv" border>paragraphCombineAv</el-radio>
+      <el-radio v-model="param3" label="paragraphCombineTot" border>paragraphCombineTot</el-radio>
+    </div>
     <br>
 
     <el-button @click="setCorpus" type="primary" plain style="margin-bottom: 10px; margin-top: 10px">创建语料库</el-button>

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>SentiStrength</h1>
     <el-checkbox-group
       v-model="optionsList"
       :min="0"
@@ -21,7 +22,7 @@
     <el-input class="inputParam" v-model="MinSentencePosForTermsIrony" placeholder="MinSentencePosForTermsIrony"></el-input>
     <el-input class="inputParam" v-model="MinSentencePosForAllIrony" placeholder="MinSentencePosForAllIrony"></el-input>
 
-    <el-select class="inputParam" v-model="select" placeholder="请选择检测版本">
+    <el-select class="inputParam" v-model="select" placeholder="请选择检测模式">
       <el-option
         v-for="item in options"
         :key="item.value"
@@ -46,7 +47,7 @@
     </div>
     <br>
 
-    <el-button @click="setCorpus" type="primary" plain style="margin-bottom: 10px; margin-top: 10px">创建语料库</el-button>
+    <el-button @click="setCorpus" type="primary" plain style="margin-bottom: 30px">创建语料库</el-button>
     <el-row class="el-row">
       <el-col :span="8" class="el-col">
         <div class="grid-content bg-purple">
@@ -116,7 +117,7 @@ export default {
       file_score: '',
       text: '',
       file: '',
-      select: 'scale',
+      select: '',
       keyword: '',
       options: [{
         value: 'trinary'

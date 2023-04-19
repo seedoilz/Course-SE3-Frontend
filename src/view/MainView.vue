@@ -322,4 +322,5 @@ el-upload {
 .checkboxParam {
   margin-bottom: 10px;
 }
+
 </style>

@@ -33,18 +33,24 @@
     </el-select>
     <br>
     <div>
-      <el-radio v-model="param1" label="sentiment" border>sentiment</el-radio>
-      <el-radio v-model="param1" label="stress" border>stress</el-radio>
+      <el-radio-group v-model="param1">
+        <el-radio @click.native.prevent="changeRadio('sentiment', 1)" label="sentiment" border>sentiment</el-radio>
+        <el-radio @click.native.prevent="changeRadio('stress', 1)" label="stress" border>stress</el-radio>
+      </el-radio-group>
     </div>
     <br>
     <div>
-      <el-radio v-model="param2" label="sentenceCombineAv" border>sentenceCombineAv</el-radio>
-      <el-radio v-model="param2" label="sentenceCombineTot" border>sentenceCombineTot</el-radio>
+      <el-radio-group v-model="param2">
+        <el-radio @click.native.prevent="changeRadio('sentenceCombineAv', 2)" label="sentenceCombineAv" border>sentenceCombineAv</el-radio>
+        <el-radio @click.native.prevent="changeRadio('sentenceCombineTot', 2)" label="sentenceCombineTot" border>sentenceCombineTot</el-radio>
+      </el-radio-group>
     </div>
     <br>
     <div>
-      <el-radio v-model="param3" label="paragraphCombineAv" border>paragraphCombineAv</el-radio>
-      <el-radio v-model="param3" label="paragraphCombineTot" border>paragraphCombineTot</el-radio>
+      <el-radio-group v-model="param3">
+        <el-radio @click.native.prevent="changeRadio('paragraphCombineAv', 3)" label="paragraphCombineAv" border>paragraphCombineAv</el-radio>
+        <el-radio @click.native.prevent="changeRadio('paragraphCombineTot', 3)" label="paragraphCombineTot" border>paragraphCombineTot</el-radio>
+      </el-radio-group>
     </div>
     <br>
 
@@ -152,6 +158,7 @@ export default {
   },
   mounted () {
   },
+
   methods: {
     getTextScore () {
       if (this.select === '') {
@@ -176,6 +183,7 @@ export default {
         }
       })
     },
+
     getFileScore () {
       if (this.file === '') {
         this.$message.error('请务必上传文件')
@@ -215,6 +223,7 @@ export default {
         console.log(error)
       })
     },
+
     fileUpload (item) {
       this.file = item.file
       this.mode = item.file
@@ -223,8 +232,10 @@ export default {
         type: 'success'
       })
     },
+
     handlePreview (file) {
     },
+
     setCorpus () {
       let options = []
       options = this.getOptions(options)
@@ -248,6 +259,7 @@ export default {
         }
       })
     },
+
     getOptions (options) {
       options = options.concat(this.optionsList)
 
@@ -309,6 +321,35 @@ export default {
       }
 
       return options
+    },
+
+    changeRadio (radio, cnt) {
+      switch (cnt) {
+        case 1:
+          if (this.param1 === radio) {
+            this.param1 = ''
+          } else {
+            this.param1 = radio
+          }
+          console.log(this.param1)
+          break
+        case 2:
+          if (this.param2 === radio) {
+            this.param2 = ''
+          } else {
+            this.param2 = radio
+          }
+          console.log(this.param2)
+          break
+        case 3:
+          if (this.param3 === radio) {
+            this.param3 = ''
+          } else {
+            this.param3 = radio
+          }
+          console.log(this.param3)
+          break
+      }
     }
   }
 }

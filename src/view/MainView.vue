@@ -113,6 +113,7 @@ export default {
   name: 'MainView',
   data () {
     return {
+      initCorpus: false,
       text_score: '',
       file_score: '',
       text: '',
@@ -159,6 +160,9 @@ export default {
       } else if (this.text === '') {
         this.$message.error('请务必输入待检测文本')
         return
+      } else if (this.initCorpus === false) {
+        this.$message.error('请务必初始化语料库')
+        return
       }
       analyzeText(this.text).then(res => {
         if (res.code === 200) {
@@ -175,6 +179,9 @@ export default {
     getFileScore () {
       if (this.file === '') {
         this.$message.error('请务必上传文件')
+        return
+      } else if (this.initCorpus === false) {
+        this.$message.error('请务必初始化语料库')
         return
       }
       let fd = new FormData()
@@ -233,6 +240,7 @@ export default {
       }).join('&')).then(res => {
         console.log(res)
         if (res.status === 200) {
+          this.initCorpus = true
           this.$message({
             message: '恭喜，创建成功',
             type: 'success'

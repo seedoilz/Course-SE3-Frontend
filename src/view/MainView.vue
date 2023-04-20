@@ -21,8 +21,9 @@
     <el-input class="inputParam" v-model="MinSentencePosForPunctuationIrony" placeholder="MinSentencePosForPunctuationIrony"></el-input>
     <el-input class="inputParam" v-model="MinSentencePosForTermsIrony" placeholder="MinSentencePosForTermsIrony"></el-input>
     <el-input class="inputParam" v-model="MinSentencePosForAllIrony" placeholder="MinSentencePosForAllIrony"></el-input>
+    <el-input class="inputParam" v-model="keyword" placeholder="请输入关键词"></el-input>
 
-    <el-select class="inputParam" v-model="select" placeholder="请选择检测模式">
+    <el-select class="inputParam" v-model="select" placeholder="请选择分析模式">
       <el-option
         v-for="item in options"
         :key="item.value"
@@ -57,7 +58,6 @@
       <el-col :span="8" class="el-col">
         <div class="grid-content bg-purple-light">
           <el-input class="text-item" placeholder="请输入待检测文本" v-model="text"></el-input>
-          <el-input class="text-item" placeholder="请输入关键词" v-model="keyword"></el-input>
           <br>
           <el-button @click="getTextScore" type="primary" plain>开始检测</el-button>
         </div>
@@ -153,22 +153,32 @@ export default {
   },
   methods: {
     getTextScore () {
-      // console.log(this.text, this.keyword, this.select)
-      this.setCorpus()
+      if (this.select === '') {
+        this.$message.error('请务必选择一个分析模式')
+        return
+      } else if (this.text === '') {
+        this.$message.error('请务必输入待检测文本')
+        return
+      }
       analyzeText(this.text).then(res => {
         if (res.code === 200) {
           this.text_score = res.data
+          this.$message({
+            message: '恭喜，分析成功',
+            type: 'success'
+          })
         } else {
           console.log(res.message)
         }
       })
     },
     getFileScore () {
-      this.setCorpus()
-      console.log('this.file', this.file)
+      if (this.file === '') {
+        this.$message.error('请务必上传文件')
+        return
+      }
       let fd = new FormData()
       fd.append('file', this.file)
-      console.log('fd', fd)
       axios.post('http://124.70.198.102:3456/text/file', fd, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -184,9 +194,13 @@ export default {
           // 创建一个a标签
           const link = document.createElement('a')
           link.href = url
-          link.download = 'result.txt'
+          link.download = 'SentiStrength_Result.txt'
           // 模拟点击a标签
           link.click()
+          this.$message({
+            message: '恭喜，分析成功',
+            type: 'success'
+          })
         } else {
           console.log('fail')
         }
@@ -197,24 +211,51 @@ export default {
     fileUpload (item) {
       this.file = item.file
       this.mode = item.file
-      // console.log('this.file', this.file)
-      // console.log('item.file', item.file)
+      this.$message({
+        message: '恭喜，上传成功',
+        type: 'success'
+      })
     },
     handlePreview (file) {
     },
     setCorpus () {
       let options = []
       options = this.getOptions(options)
-      options.push(this.select, this.param1, this.param2, this.param3)
+      if (this.select !== '') {
+        options.push(this.select)
+      } else {
+        this.$message.error('请务必选择一个分析模式')
+        return
+      }
       console.log(options)
       axios.post('http://124.70.198.102:3456/text/corpus?' + options.map(s => {
         return 'options=' + s
       }).join('&')).then(res => {
         console.log(res)
+        if (res.status === 200) {
+          this.$message({
+            message: '恭喜，创建成功',
+            type: 'success'
+          })
+        }
       })
     },
     getOptions (options) {
       options = options.concat(this.optionsList)
+
+      if (this.param1 !== '') {
+        options.push(this.param1)
+      }
+      if (this.param2 !== '') {
+        options.push(this.param2)
+      }
+      if (this.param3 !== '') {
+        options.push(this.param3)
+      }
+
+      if (this.keyword !== '') {
+        options.push(this.keyword)
+      }
 
       if (this.wordsBeforeKeywords !== '') {
         options.push('wordsBeforeKeywords', this.wordsBeforeKeywords)

@@ -87,13 +87,14 @@
             class="file-upload"
             action="action"
             :on-preview="handlePreview"
+            :before-upload="beforeUpload"
             :http-request="fileUpload"
             :on-success="getFileScore"
             multiple
             :limit="1"
             :file="file">
             <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传txt文件，且不超过500kb</div>
+            <div slot="tip" class="el-upload__tip">只能上传一个txt文件，且不超过20MB</div>
           </el-upload>
           <el-button @click="getFileScore" type="primary" plain>开始检测</el-button>
         </div>
@@ -185,6 +186,7 @@ export default {
     },
 
     getFileScore () {
+      console.log(this.file)
       if (this.file === '') {
         this.$message.error('请务必上传文件')
         return
@@ -200,7 +202,7 @@ export default {
         }
       }).then(response => {
         if (response.status === 200) {
-          console.log('res', response)
+          console.log('res:', response)
           this.file_score = 'success'
           // 创建一个Blob对象
           const blob = new Blob([response.data], {type: response.headers['content-type']})
@@ -220,7 +222,7 @@ export default {
           console.log('fail')
         }
       }).catch(error => {
-        console.log(error)
+        console.log('error', error)
       })
     },
 
@@ -350,6 +352,14 @@ export default {
           console.log(this.param3)
           break
       }
+    },
+
+    beforeUpload (file) {
+      const isLt20M = file.size / 1024 / 1024 < 20
+      if (!isLt20M) {
+        this.$message.error('上传文件大小不能超过 20MB!')
+      }
+      return isLt20M
     }
   }
 }

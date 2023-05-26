@@ -11,12 +11,14 @@
       <h1>表2</h1>
       <div id="countChart" class="chart"></div>
       <p>x轴为不同版本，y轴为积极情绪和消极情绪的数量</p>
+      <el-button @click="showCountChart" type="primary" plain>刷新</el-button>
     </div>
 
     <div>
       <h1>表3</h1>
       <div id="userChart" class="chart"></div>
-      <p>输入用户名，x1轴为用户评论时间，x2轴为版本，y轴为情绪词数量</p>
+      <p>输入用户名，x1轴为用户评论时间，x2轴为版本，y轴为情绪值</p>
+      <el-button @click="showUserChart" type="primary" plain>刷新</el-button>
     </div>
 
   </div>
@@ -24,23 +26,41 @@
 
 <script>
 import * as echarts from 'echarts'
+import axios from 'axios'
 export default {
   name: 'AnalysisView',
   data () {
     return {
-
     }
   },
   mounted () {
     this.showProportionChart()
+    this.showCountChart()
+    this.showUserChart()
   },
   methods: {
     showProportionChart () {
+      let fd = new FormData()
+      fd.append('file', this.file)
+      axios.post('http://124.70.198.102:3456/data/list', fd, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response => {
+        if (response.status === 200) {
+          console.log('success')
+        } else {
+          console.log(response)
+        }
+      })
+
       let chartDom = document.getElementById('proportionChart')
       let myChart = echarts.init(chartDom)
       let option
+      const colors = ['#5470C6', '#EE6666']
 
       option = {
+        color: colors,
         title: {
         },
         tooltip: {
@@ -60,11 +80,231 @@ export default {
             saveAsImage: {}
           }
         },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        xAxis: [
+          {
+            type: 'category',
+            axisTick: {
+              alignWithLabel: true
+            },
+            axisLine: {
+              onZero: false,
+              lineStyle: {
+                color: colors[1]
+              }
+            },
+            axisPointer: {
+              label: {
+                formatter: function (params) {
+                  return (
+                    'Precipitation  ' +
+                    params.value +
+                    (params.seriesData.length ? '：' + params.seriesData[0].data : '')
+                  )
+                }
+              }
+            },
+            // prettier-ignore
+            data: ['2016-1', '2016-2', '2016-3', '2016-4', '2016-5', '2016-6', '2016-7', '2016-8', '2016-9', '2016-10', '2016-11', '2016-12']
+          },
+          {
+            type: 'category',
+            axisTick: {
+              alignWithLabel: true
+            },
+            axisLine: {
+              onZero: false,
+              lineStyle: {
+                color: colors[0]
+              }
+            },
+            axisPointer: {
+              label: {
+                formatter: function (params) {
+                  return (
+                    'Precipitation  ' +
+                    params.value +
+                    (params.seriesData.length ? '：' + params.seriesData[0].data : '')
+                  )
+                }
+              }
+            },
+            // prettier-ignore
+            data: ['2015-1', '2015-2', '2015-3', '2015-4', '2015-5', '2015-6', '2015-7', '2015-8', '2015-9', '2015-10', '2015-11', '2015-12']
+          }
+        ],
+        yAxis: {
+          type: 'value'
         },
+        series: [
+          {
+            name: 'Email',
+            type: 'line',
+            stack: 'Total',
+            data: [120, 132, 101, 134, 90, 230, 210]
+          },
+          {
+            name: 'Union Ads',
+            type: 'line',
+            stack: 'Total',
+            data: [220, 182, 191, 234, 290, 330, 310]
+          }
+        ]
+      }
+      option && myChart.setOption(option)
+    },
+
+    showCountChart () {
+      let fd = new FormData()
+      fd.append('file', this.file)
+      axios.post('http://124.70.198.102:3456/data/list', fd, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response => {
+        if (response.status === 200) {
+          console.log('success')
+        } else {
+          console.log(response)
+        }
+      })
+
+      let chartDom = document.getElementById('countChart')
+      let myChart = echarts.init(chartDom)
+      let option
+
+      option = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          }
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            axisTick: {
+              alignWithLabel: true
+            }
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value'
+          }
+        ],
+        series: [
+          {
+            name: 'Direct',
+            type: 'bar',
+            barWidth: '60%',
+            data: [10, 52, 200, 334, 390, 330, 220]
+          }
+        ]
+      }
+
+      option && myChart.setOption(option)
+    },
+
+    showUserChart () {
+      let fd = new FormData()
+      fd.append('file', this.file)
+      axios.post('http://124.70.198.102:3456/data/list', fd, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response => {
+        if (response.status === 200) {
+          console.log('success')
+        } else {
+          console.log(response)
+        }
+      })
+
+      let chartDom = document.getElementById('userChart')
+      let myChart = echarts.init(chartDom)
+      let option
+      const colors = ['#5470C6', '#EE6666']
+
+      option = {
+        color: colors,
+        title: {
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: ['Email', 'Union Ads']
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        toolbox: {
+          feature: {
+            saveAsImage: {}
+          }
+        },
+        xAxis: [
+          {
+            type: 'category',
+            axisTick: {
+              alignWithLabel: true
+            },
+            axisLine: {
+              onZero: false,
+              lineStyle: {
+                color: colors[1]
+              }
+            },
+            axisPointer: {
+              label: {
+                formatter: function (params) {
+                  return (
+                    'Precipitation  ' +
+                    params.value +
+                    (params.seriesData.length ? '：' + params.seriesData[0].data : '')
+                  )
+                }
+              }
+            },
+            // prettier-ignore
+            data: ['2016-1', '2016-2', '2016-3', '2016-4', '2016-5', '2016-6', '2016-7', '2016-8', '2016-9', '2016-10', '2016-11', '2016-12']
+          },
+          {
+            type: 'category',
+            axisTick: {
+              alignWithLabel: true
+            },
+            axisLine: {
+              onZero: false,
+              lineStyle: {
+                color: colors[0]
+              }
+            },
+            axisPointer: {
+              label: {
+                formatter: function (params) {
+                  return (
+                    'Precipitation  ' +
+                    params.value +
+                    (params.seriesData.length ? '：' + params.seriesData[0].data : '')
+                  )
+                }
+              }
+            },
+            // prettier-ignore
+            data: ['2015-1', '2015-2', '2015-3', '2015-4', '2015-5', '2015-6', '2015-7', '2015-8', '2015-9', '2015-10', '2015-11', '2015-12']
+          }
+        ],
         yAxis: {
           type: 'value'
         },

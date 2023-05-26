@@ -1,23 +1,24 @@
 <template>
   <div>
-    <div id="proportionChart" class="chart"></div>
     <div>
       <h1>表1</h1>
+      <div id="proportionChart" class="chart"></div>
       <p>折线图中两条折线，分别积极情绪和消极情绪的占比，y轴为占比比例，x1轴为评论的时间,x2轴为版本</p>
       <el-button @click="showProportionChart" type="primary" plain>刷新</el-button>
     </div>
 
-    <div id="countChart" class="chart"></div>
     <div>
       <h1>表2</h1>
+      <div id="countChart" class="chart"></div>
       <p>x轴为不同版本，y轴为积极情绪和消极情绪的数量</p>
     </div>
 
-    <div id="userChart" class="chart"></div>
     <div>
       <h1>表3</h1>
+      <div id="userChart" class="chart"></div>
       <p>输入用户名，x1轴为用户评论时间，x2轴为版本，y轴为情绪词数量</p>
     </div>
+
   </div>
 </template>
 

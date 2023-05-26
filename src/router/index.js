@@ -2,13 +2,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import MainView from '@/view/MainView.vue'
 import ManagementView from '@/view/ManagementView'
+import AnalysisView from '@/view/AnalysisView'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/main',
       name: 'MainView',
       component: MainView
     },
@@ -16,6 +17,11 @@ export default new Router({
       path: '/management',
       name: 'ManagementView',
       component: ManagementView
+    },
+    {
+      path: '/',
+      name: 'AnalysisView',
+      component: AnalysisView
     }
   ]
 })

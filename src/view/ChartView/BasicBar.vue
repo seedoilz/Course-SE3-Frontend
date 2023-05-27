@@ -54,7 +54,7 @@ export default {
           {
             type: 'value',
             name: 'positive',
-            position: 'right',
+            position: 'left',
             alignTicks: true,
             axisLine: {
               show: true,
@@ -63,7 +63,7 @@ export default {
               }
             },
             axisLabel: {
-              formatter: '{value} ml'
+              formatter: '{value}'
             }
           },
           {
@@ -71,7 +71,6 @@ export default {
             name: 'negative',
             position: 'right',
             alignTicks: true,
-            offset: 80,
             axisLine: {
               show: true,
               lineStyle: {
@@ -79,7 +78,7 @@ export default {
               }
             },
             axisLabel: {
-              formatter: '{value} ml'
+              formatter: '{value}'
             }
           }
         ],
@@ -105,5 +104,8 @@ export default {
 </script>
 
 <style>
-
+.chart {
+  width: 80%;
+  height:400px;
+}
 </style>

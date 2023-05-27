@@ -18,16 +18,10 @@
 
     <BasicBar txt="x轴为不同版本，y轴为积极情绪和消极情绪的数量"
               head="表3"
-    >
-
+              v-bind:positive="[23, 25, 43, 13, 25, 14]"
+              v-bind:negative="[17, 12, 14, 15, 35, 24]"
+              v-bind:x="['v1.1', 'v1.2', 'v1.3', 'v1.4', 'v1.5', 'v1.6']">
     </BasicBar>
-
-    <!--    <div>-->
-    <!--      <h1>表2</h1>-->
-    <!--      <div id="countChart" class="chart"></div>-->
-    <!--      <p>x轴为不同版本，y轴为积极情绪和消极情绪的数量</p>-->
-    <!--      <el-button @click="showCountChart" type="primary" plain>刷新</el-button>-->
-    <!--    </div>-->
 
   </div>
 </template>

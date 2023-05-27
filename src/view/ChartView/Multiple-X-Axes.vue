@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1>表1</h1>
-    <div id="proportionChart" class="chart"></div>
-    <p>{{this.txt}}}</p>
+    <h1>{{this.head}}</h1>
+    <div :id="head" class="chart"></div>
+    <p>{{this.txt}}</p>
     <el-button @click="showMultipleXAxesChart" type="primary" plain>刷新</el-button>
   </div>
 </template>
@@ -16,38 +16,32 @@ export default {
     x2: Array,
     positive: Array,
     negative: Array,
-    txt: String
+    txt: String,
+    head: String
   },
   mounted () {
     this.showMultipleXAxesChart()
   },
   methods: {
     showMultipleXAxesChart () {
-      let chartDom = document.getElementById('proportionChart')
+      let chartDom = document.getElementById(this.head)
       let myChart = echarts.init(chartDom)
       let option
-      const colors = ['#5470C6', '#EE6666']
 
+      const colors = ['#5470C6', '#EE6666']
       option = {
         color: colors,
-        title: {
-        },
         tooltip: {
-          trigger: 'axis'
+          trigger: 'none'
+          // 鼠标悬浮时显示
+          // axisPointer: {
+          //   type: 'cross'
+          // }
         },
-        legend: {
-          data: ['positive', 'negative']
-        },
+        legend: {},
         grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
+          top: 70,
+          bottom: 50
         },
         xAxis: [
           {
@@ -65,7 +59,7 @@ export default {
               label: {
                 formatter: function (params) {
                   return (
-                    'Precipitation  ' +
+                    'negative  ' +
                     params.value +
                     (params.seriesData.length ? '：' + params.seriesData[0].data : '')
                   )
@@ -73,8 +67,7 @@ export default {
               }
             },
             // prettier-ignore
-            // TODO 填写x1单位
-            data: this.x1
+            data: this.x2
           },
           {
             type: 'category',
@@ -91,7 +84,7 @@ export default {
               label: {
                 formatter: function (params) {
                   return (
-                    'Precipitation  ' +
+                    'positive  ' +
                     params.value +
                     (params.seriesData.length ? '：' + params.seriesData[0].data : '')
                   )
@@ -99,28 +92,37 @@ export default {
               }
             },
             // prettier-ignore
-            // TODO 填写x2轴单位
-            data: this.x2
+            data: this.x1
           }
         ],
-        yAxis: {
-          type: 'value'
-        },
+        yAxis: [
+          {
+            type: 'value'
+          }
+        ],
         series: [
           {
             name: 'positive',
             type: 'line',
-            stack: 'Total',
+            xAxisIndex: 1,
+            smooth: true,
+            emphasis: {
+              focus: 'series'
+            },
             data: this.positive
           },
           {
             name: 'negative',
             type: 'line',
-            stack: 'Total',
+            smooth: true,
+            emphasis: {
+              focus: 'series'
+            },
             data: this.negative
           }
         ]
       }
+
       option && myChart.setOption(option)
     }
   }

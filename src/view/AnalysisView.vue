@@ -1,30 +1,44 @@
 <template>
   <div>
     <el-row :gutter="20">
-      <el-col :span="8"><div class="grid-content bg-purple">
-        <MultipleXAxes v-bind:x1="['v1.1', 'v1.2', 'v1.3', 'v1.4']"
-                       v-bind:x2="['2015-1', '2015-2', '2015-3', '2015-4', '2015-5', '2015-6', '2015-7', '2015-8', '2015-9', '2015-10', '2015-11', '2015-12']"
-                       v-bind:positive-proportion="[0.120, 0.132, 0.101, 0.134, 0.90, 0.230, 0.210]"
-                       v-bind:negative-proportion="[0.220, 0.182, 0.191, 0.234, 0.290, 0.330, 0.310]">
-        </MultipleXAxes>
-      </div></el-col>
-      <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
-      <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+      <el-col :span="8">
+        <div class="grid-content bg-purple">
+          <MultipleXAxes v-bind:x2="['v1.1', 'v1.2', 'v1.3', 'v1.4']"
+                         v-bind:x1="['2015-1', '2015-2', '2015-3', '2015-4', '2015-5', '2015-6', '2015-7', '2015-8', '2015-9', '2015-10', '2015-11', '2015-12']"
+                         v-bind:positive="[0.120, 0.132, 0.101, 0.134, 0.90, 0.230, 0.210]"
+                         v-bind:negative="[0.220, 0.182, 0.191, 0.234, 0.290, 0.330, 0.310]"
+                         txt="折线图中两条折线，分别积极情绪和消极情绪的占比，y轴为占比比例，x1轴为评论的时间,x2轴为版本">
+          </MultipleXAxes>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="grid-content bg-purple"></div>
+      </el-col>
+      <el-col :span="8">
+        <div class="grid-content bg-purple">
+          <MultipleXAxes v-bind:x2="['v1.1', 'v1.2', 'v1.3', 'v1.4']"
+                         v-bind:x1="['2015-1', '2015-2', '2015-3', '2015-4', '2015-5', '2015-6', '2015-7', '2015-8', '2015-9', '2015-10', '2015-11', '2015-12']"
+                         v-bind:positive="[1, 2, 0.1, 3, 0, 2, 1]"
+                         v-bind:negative="[2, 1, 1, 4, 2, 3, 0]"
+                         txt="输入用户名，x1轴为用户评论时间，x2轴为版本，y轴为情绪值">
+          </MultipleXAxes>
+        </div>
+      </el-col>
     </el-row>
 
-<!--    <div>-->
-<!--      <h1>表2</h1>-->
-<!--      <div id="countChart" class="chart"></div>-->
-<!--      <p>x轴为不同版本，y轴为积极情绪和消极情绪的数量</p>-->
-<!--      <el-button @click="showCountChart" type="primary" plain>刷新</el-button>-->
-<!--    </div>-->
+    <!--    <div>-->
+    <!--      <h1>表2</h1>-->
+    <!--      <div id="countChart" class="chart"></div>-->
+    <!--      <p>x轴为不同版本，y轴为积极情绪和消极情绪的数量</p>-->
+    <!--      <el-button @click="showCountChart" type="primary" plain>刷新</el-button>-->
+    <!--    </div>-->
 
-<!--    <div>-->
-<!--      <h1>表3</h1>-->
-<!--      <div id="userChart" class="chart"></div>-->
-<!--      <p>输入用户名，x1轴为用户评论时间，x2轴为版本，y轴为情绪值</p>-->
-<!--      <el-button @click="showUserChart" type="primary" plain>刷新</el-button>-->
-<!--    </div>-->
+    <!--    <div>-->
+    <!--      <h1>表3</h1>-->
+    <!--      <div id="userChart" class="chart"></div>-->
+    <!--      <p>输入用户名，x1轴为用户评论时间，x2轴为版本，y轴为情绪值</p>-->
+    <!--      <el-button @click="showUserChart" type="primary" plain>刷新</el-button>-->
+    <!--    </div>-->
 
   </div>
 </template>
@@ -33,12 +47,12 @@
 import * as echarts from 'echarts'
 import axios from 'axios'
 import MultipleXAxes from '@/view/ChartView/Multiple-X-Axes.vue'
+
 export default {
   name: 'AnalysisView',
   components: {MultipleXAxes},
   data () {
-    return {
-    }
+    return {}
   },
   mounted () {
     // this.showProportionChart()
@@ -56,7 +70,6 @@ export default {
       }).then(response => {
         if (response.status === 200) {
           console.log('success')
-
         } else {
           console.log(response)
         }
@@ -69,8 +82,7 @@ export default {
 
       option = {
         color: colors,
-        title: {
-        },
+        title: {},
         tooltip: {
           trigger: 'axis'
         },
@@ -112,7 +124,7 @@ export default {
               }
             },
             // prettier-ignore
-            //TODO 填写x1单位
+            // TODO 填写x1单位
             data: ['v1.1', 'v1.2', 'v1.3', 'v1.4']
           },
           {
@@ -138,7 +150,7 @@ export default {
               }
             },
             // prettier-ignore
-            //TODO 填写x2轴单位
+            // TODO 填写x2轴单位
             data: ['2015-1', '2015-2', '2015-3', '2015-4', '2015-5', '2015-6', '2015-7', '2015-8', '2015-9', '2015-10', '2015-11', '2015-12']
           }
         ],
@@ -244,8 +256,7 @@ export default {
 
       option = {
         color: colors,
-        title: {
-        },
+        title: {},
         tooltip: {
           trigger: 'axis'
         },
@@ -342,26 +353,33 @@ export default {
 <style>
 .el-row {
   margin-bottom: 20px;
+
   &:last-child {
     margin-bottom: 0;
   }
 }
+
 .el-col {
   border-radius: 4px;
 }
+
 .bg-purple-dark {
   background: #99a9bf;
 }
+
 .bg-purple {
   background: #d3dce6;
 }
+
 .bg-purple-light {
   background: #e5e9f2;
 }
+
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
 }
+
 .row-bg {
   padding: 10px 0;
   background-color: #f9fafc;

@@ -351,7 +351,7 @@ export default {
 </script>
 
 <style>
-.el-row {
+el-row {
   margin-bottom: 20px;
 
   &:last-child {
@@ -359,7 +359,7 @@ export default {
   }
 }
 
-.el-col {
+el-col {
   border-radius: 4px;
 }
 

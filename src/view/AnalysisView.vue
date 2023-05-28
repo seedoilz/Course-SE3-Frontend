@@ -44,7 +44,7 @@
             <b class="data-title-right fr">]</b>
           </div>
           <!-- 项目人员信息状态-->
-          <div class="ryclts" style="height: auto">
+          <div class="ryclts" style="height: 1038px">
             <div id="xjfxzt" style="height:100%">
               <MultipleXAxes v-bind:x2="['v1.1', 'v1.2', 'v1.3', 'v1.4', 'v1.1', 'v1.2', 'v1.3', 'v1.4', 'v1.1', 'v1.2']"
                              v-bind:x1="['2015-1', '2015-2', '2015-3', '2015-4', '2015-5', '2015-6', '2015-7', '2015-8', '2015-9', '2015-10', '2015-11', '2015-12']"
@@ -57,11 +57,12 @@
           </div>
         </div>
 
+
       </div>
 
       <!--仪表盘等展示-->
       <div class="center_zs fl">
-        <div class="data-box1 box1-back">
+        <div class="data-box1 box1-back" style="height: 1175px">
           <i class="topL"></i>
           <i class="topR"></i>
           <i class="bottomL"></i>

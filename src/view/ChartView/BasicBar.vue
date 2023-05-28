@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="BasicBar">
     <h1>{{this.head}}</h1>
     <div :id="head" class="chart"></div>
     <p>{{this.txt}}</p>
-    <el-button @click="showCountChart" type="primary" plain>刷新</el-button>
+    <el-button @click="showCountChart" type="primary" plain class="button" size="mini">刷新</el-button>
   </div>
 </template>
 
@@ -59,6 +59,7 @@ export default {
             axisLine: {
               show: true,
               lineStyle: {
+                // 设置坐标轴颜色
                 color: colors[0]
               }
             },
@@ -74,6 +75,7 @@ export default {
             axisLine: {
               show: true,
               lineStyle: {
+                // 设置坐标轴颜色
                 color: colors[1]
               }
             },
@@ -107,5 +109,14 @@ export default {
 .chart {
   width: 80%;
   height:400px;
+}
+p, h1 {
+  color: white;
+}
+.BasicBar {
+  text-align: center;
+}
+.button {
+
 }
 </style>

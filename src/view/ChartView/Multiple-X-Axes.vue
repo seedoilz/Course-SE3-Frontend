@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="MultipleXAxes">
     <h1>{{this.head}}</h1>
     <div :id="head" class="chart"></div>
     <p>{{this.txt}}</p>
-    <el-button @click="showMultipleXAxesChart" type="primary" plain>刷新</el-button>
+    <el-button @click="showMultipleXAxesChart" type="primary" plain class="button" size="mini">刷新</el-button>
   </div>
 </template>
 
@@ -51,6 +51,7 @@ export default {
             },
             axisLine: {
               onZero: false,
+              // 设置坐标轴颜色
               lineStyle: {
                 color: colors[1]
               }
@@ -77,6 +78,7 @@ export default {
             axisLine: {
               onZero: false,
               lineStyle: {
+                // 设置坐标轴颜色
                 color: colors[0]
               }
             },
@@ -103,6 +105,9 @@ export default {
         series: [
           {
             name: 'positive',
+            textStyle: {
+              color: colors[1]
+            },
             type: 'line',
             xAxisIndex: 1,
             smooth: true,
@@ -113,6 +118,9 @@ export default {
           },
           {
             name: 'negative',
+            label: {
+              color: colors[1]
+            },
             type: 'line',
             smooth: true,
             emphasis: {
@@ -133,5 +141,14 @@ export default {
 .chart {
   width: 80%;
   height:400px;
+}
+.MultipleXAxes {
+  height: 80%;
+}
+p, h1 {
+  color: white;
+}
+.button {
+
 }
 </style>

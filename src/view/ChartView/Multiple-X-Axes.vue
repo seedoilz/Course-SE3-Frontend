@@ -3,7 +3,6 @@
     <h1>{{this.head}}</h1>
     <div :id="head" class="chart"></div>
     <p>{{this.txt}}</p>
-    <el-button @click="showMultipleXAxesChart" type="primary" plain class="button" size="mini">刷新</el-button>
   </div>
 </template>
 
@@ -13,7 +12,6 @@ export default {
   name: 'Multiple-X-Axes',
   props: {
     x1: Array,
-    x2: Array,
     positive: Array,
     negative: Array,
     txt: String,
@@ -30,102 +28,48 @@ export default {
 
       const colors = ['#5470C6', '#EE6666']
       option = {
-        color: colors,
         tooltip: {
-          trigger: 'none'
-          // 鼠标悬浮时显示
-          // axisPointer: {
-          //   type: 'cross'
-          // }
+          trigger: 'axis'
         },
-        legend: {},
+        legend: {
+          data: ['positive', 'negative']
+        },
         grid: {
-          top: 70,
-          bottom: 50
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
         },
-        xAxis: [
-          {
-            type: 'category',
-            axisTick: {
-              alignWithLabel: true
-            },
-            axisLine: {
-              onZero: false,
-              // 设置坐标轴颜色
-              lineStyle: {
-                color: colors[1]
-              }
-            },
-            axisPointer: {
-              label: {
-                formatter: function (params) {
-                  return (
-                    'negative  ' +
-                    params.value +
-                    (params.seriesData.length ? '：' + params.seriesData[0].data : '')
-                  )
-                }
-              }
-            },
-            // prettier-ignore
-            data: this.x2
-          },
-          {
-            type: 'category',
-            axisTick: {
-              alignWithLabel: true
-            },
-            axisLine: {
-              onZero: false,
-              lineStyle: {
-                // 设置坐标轴颜色
-                color: colors[0]
-              }
-            },
-            axisPointer: {
-              label: {
-                formatter: function (params) {
-                  return (
-                    'positive  ' +
-                    params.value +
-                    (params.seriesData.length ? '：' + params.seriesData[0].data : '')
-                  )
-                }
-              }
-            },
-            // prettier-ignore
-            data: this.x1
+        toolbox: {
+          feature: {
+            saveAsImage: {}
           }
-        ],
-        yAxis: [
-          {
-            type: 'value'
-          }
-        ],
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: this.x1
+        },
+        yAxis: {
+          type: 'value'
+        },
         series: [
           {
             name: 'positive',
             textStyle: {
-              color: colors[1]
+              color: colors[0]
             },
             type: 'line',
-            xAxisIndex: 1,
-            smooth: true,
-            emphasis: {
-              focus: 'series'
-            },
+            stack: 'Total',
             data: this.positive
           },
           {
             name: 'negative',
-            label: {
+            textStyle: {
               color: colors[1]
             },
             type: 'line',
-            smooth: true,
-            emphasis: {
-              focus: 'series'
-            },
+            stack: 'Total',
             data: this.negative
           }
         ]

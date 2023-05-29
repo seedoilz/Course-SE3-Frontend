@@ -3,7 +3,6 @@
     <h1>{{this.head}}</h1>
     <div :id="head" class="chart"></div>
     <p>{{this.txt}}</p>
-    <el-button @click="showCountChart" type="primary" plain class="button" size="mini">刷新</el-button>
   </div>
 </template>
 

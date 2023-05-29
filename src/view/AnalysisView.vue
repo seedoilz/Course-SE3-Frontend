@@ -25,6 +25,31 @@
             <div id="xmgl_cen">
               <div class="xmgl_tb">
                 <span>Apache Superset</span>
+                <br><br>
+                <el-select v-model="chosenCollectionID">
+                  <el-option v-for="it in collectionList"
+                             :label="it.name"
+                             :key="it.id"
+                             :value="it.id">
+                  </el-option>
+                </el-select>
+                <br><br>
+                <div class="block">
+                  <span class="demonstration">请选择日期</span>
+                  <el-date-picker
+                    v-model="beginEndData"
+                    type="daterange"
+                    align="right"
+                    unlink-panels
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd"
+                    :picker-options="pickerOptions">
+                  </el-date-picker>
+                </div>
+                <el-button @click="showCountChart1" type="primary" plain class="button" size="small">查看</el-button>
               </div>
               <div class="xmgl_tb none">
 
@@ -32,7 +57,7 @@
             </div>
           </div>
         </div>
-        <!-- 项目人员信息状态 -->
+
         <div class="data-box1 left_tb fl mtop40">
           <i class="topL"></i>
           <i class="topR"></i>
@@ -43,10 +68,10 @@
             <span>情绪占比图</span>
             <b class="data-title-right fr">]</b>
           </div>
-          <!-- 项目人员信息状态-->
+
           <div class="ryclts" style="height: 1038px">
             <div id="xjfxzt" style="height:100%">
-              <MultipleXAxes v-bind:x2="['v1.1', 'v1.2', 'v1.3', 'v1.4', 'v1.1', 'v1.2', 'v1.3', 'v1.4', 'v1.1', 'v1.2']"
+              <MultipleXAxes
                              v-bind:x1="['2015-1', '2015-2', '2015-3', '2015-4', '2015-5', '2015-6', '2015-7', '2015-8', '2015-9', '2015-10', '2015-11', '2015-12']"
                              v-bind:positive="[0.120, 0.132, 0.101, 0.134, 0.90, 0.230, 0.210, 0.1, 0.2, 0.3]"
                              v-bind:negative="[0.220, 0.182, 0.191, 0.234, 0.290, 0.330, 0.310, 0.1, 0.2, 0.3]"
@@ -58,8 +83,6 @@
         </div>
 
       </div>
-
-      <!--仪表盘等展示-->
       <div class="center_zs fl">
         <div class="data-box1 box1-back" style="height: 1175px">
           <i class="topL"></i>
@@ -74,9 +97,7 @@
 
         </div>
       </div>
-      <!--右侧图表展示 -->
       <div class="right_zs fl">
-        <!-- 巡检风险状态 -->
         <div class="data-box1 right_tb ">
           <i class="topL"></i>
           <i class="topR"></i>
@@ -87,10 +108,9 @@
             <span>用户情绪图</span>
             <b class="data-title-right">]</b>
           </div>
-          <!--巡检风险状态-->
           <div class="ryclts">
             <div id="xjfxzt" style="height:100%">
-                  <MultipleXAxes v-bind:x2="['v1.1', 'v1.2', 'v1.3', 'v1.4', 'v1.1', 'v1.2', 'v1.3', 'v1.4', 'v1.1', 'v1.2']"
+                  <MultipleXAxes
                                  v-bind:x1="['2016-1', '2016-2', '2016-3', '2016-4', '2016-5', '2016-6', '2016-7', '2016-8', '2016-9', '2016-10', '2016-11', '2016-12']"
                                  v-bind:positive="[1, 2, 1, 3, 0, 2, 1, 1, 3, 0]"
                                  v-bind:negative="[2, 1, 1, 4, 2, 3, 0, 1, 3, 0]"
@@ -101,7 +121,6 @@
           </div>
         </div>
 
-        <!-- 风险变化趋势 -->
         <div class="data-box1 right_tb mtop40">
           <i class="topL"></i>
           <i class="topR"></i>
@@ -131,29 +150,73 @@
 </template>
 
 <script>
-import axios from 'axios'
 import MultipleXAxes from '@/view/ChartView/Multiple-X-Axes.vue'
 import BasicBar from '@/view/ChartView/BasicBar.vue'
+import {getSentiByTime} from '@/network/main'
+import {listAllCollection} from '@/network/management'
 
 export default {
   name: 'AnalysisView',
   components: {BasicBar, MultipleXAxes},
   data () {
-    return {}
+    return {
+      collectionList: [],
+      chosenCollectionID: '',
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近三个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      },
+      beginEndData: '',
+      multipleX: []
+    }
   },
   mounted () {
+    listAllCollection({
+      params: {}
+    }).then(res => {
+      if (res.code === 200) {
+        this.collectionList = res.data.list
+      } else {
+        this.$message({
+          message: res.data.list
+        })
+      }
+    })
   },
   methods: {
     showCountChart1 () {
-      let fd = new FormData()
-      fd.append('file', this.file)
-      axios.post('http://124.70.198.102:3456/data/list', fd, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      getSentiByTime({
+        params: {
+          collectionId: this.chosenCollectionID,
+          beginDate: this.beginEndData[0],
+          endDate: this.beginEndData[1]
         }
       }).then(response => {
-        if (response.status === 200) {
-          console.log('success')
+        if (response.code === 200) {
+          console.log(response.data)
         } else {
           console.log(response)
         }

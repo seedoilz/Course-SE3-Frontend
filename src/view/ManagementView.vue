@@ -2,40 +2,102 @@
 <div>
 <el-container>
   <el-header>
-    Header
-    <div>
-      PLACEHOLDER
+    <div class="caption-title">
+      <i class="fl"><img src="../assets/images/title-left.png" alt=""></i>
+      <span class="biaoti fl" style="color: #000c3b">数据管理</span>
+      <i class="fr"><img src="../assets/images/title-right.png" alt=""></i>
     </div>
   </el-header>
-  <el-container style="height: 100vh;">
-    <el-aside>
-      Aside
-      <div>
-        PLACEHOLDER
+  <el-container style="height: 100%;">
+    <el-aside class="zhenwen">
+      <div class="center_zs fl" style="width: 90%;">
+        <div>
+          <i class="topL"></i>
+          <i class="topR"></i>
+          <i class="bottomL"></i>
+          <i class="bottomR"></i>
+          <div class="data-title" style="background-color: transparent">
+            <b class="data-title-left">[</b>
+            <span>数据集
+                <el-button :circle="true" plain="plain" @click="formVisible = true">
+                <i class="el-icon-plus"></i>
+              </el-button>
+            </span>
+            <b class="data-title-right">]</b>
+          </div>
+          <div>
+            <el-collapse>
+              <el-collapse-item name="-1">
+                <template #title>
+                  <div style="display: flex;flex-direction: row; flex: 1;align-items: center; justify-content: space-between; ">
+                    <div>
+                      Add Data
+                    </div>
+                    <el-button type="primary" size="mini" plain="plain" :circle="true" @click="getData(-1);currentCollection=-1"><i class="el-icon-s-operation" ></i></el-button>
+                  </div>
+                </template>
+                <div>
+                  All Data
+                </div>
+              </el-collapse-item>
+                <el-collapse-item v-for="(item, index) in collectionList" :index="index" :key="item.id" :name="index">
+                  <template #title>
+                    <div style="display: flex;flex-direction: row; flex: 1;align-items: center; justify-content: space-between; ">
+                      <div>
+                        {{item.name}}
+                      </div>
+                      <el-button type="primary" size="mini" plain="plain" :circle="true" @click="getData(item.id);currentCollection=item.id"><i class="el-icon-s-operation" ></i></el-button>
+                    </div>
+                  </template>
+                  <div>
+                    {{item.description}}
+                  </div>
+                </el-collapse-item>
+              </el-collapse>
+          </div>
+        </div>
       </div>
     </el-aside>
-    <el-main>
-      Main
-      <div>
-        PLACEHOLDER
+    <el-main style="overflow: clip">
+      <div class="data-title" style="margin-top:30px; background-color: transparent">
+        <b class="data-title-left">[</b>
+        <span>数据展示</span>
+        <b class="data-title-right">]</b>
       </div>
-      <div class="top">
-        <div style="margin: 20px; text-align: right;">
+      <div class="top" style="text-align: left;">
+        <div style="margin: 20px">
           <el-input
             v-model="search"
-            size="mini"
             style="width: 50%"
             placeholder="search"/>
+          查询条数(页大小:)
+          <el-input
+            v-model="pageSize"
+            style="width: 100px"
+            placeholder="请输入查询条数"/>
+        </div>
+        <div>
+          添加至数据集:
+          <el-select v-model="chosenCollection">
+            <el-option v-for="it in collectionList"
+                       :label="it.name"
+                       :key="it.id"
+                       :value="it.id"
+            >
+            </el-option>
+          </el-select>
+          <el-button plain="plain" @click="addDataToCollection" style="width: 70px;height: 40px;">添加</el-button>
         </div>
       </div>
       <div style="text-align: center;">
         <el-table
         :data="dataList.filter(data => !search || data.labels.includes(search) || data.content.includes(search))"
         style="width: 100%;"
-        max-height="800"
         :header-cell-style="{'text-align': 'center'}"
-        :cell-style="{'text-align': 'center'}">
-        <el-table-column
+        :cell-style="{'text-align': 'center'}"
+        @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" />
+        <el-table-column sortable
           prop="issueNumber"
           label="issue no"
           width="100">
@@ -45,20 +107,20 @@
           label="internal no"
           width="100">
         </el-table-column>
-        <el-table-column
+        <el-table-column sortable
           prop="username"
           label="username"
-          width="100">
+          width="120">
         </el-table-column>
-        <el-table-column
+        <el-table-column sortable
           prop="projectName"
           label="project"
           width="100">
         </el-table-column>
-        <el-table-column
+        <el-table-column sortable
           prop="versionNumber"
           label="version"
-          width="80">
+          width="100">
         </el-table-column>
         <el-table-column
           type="expand"
@@ -70,44 +132,79 @@
             <div>isPullRequest: {{props.row.isPullRequest}}</div>
           </template>
         </el-table-column>
-        <el-table-column
+        <el-table-column sortable
           prop="createdAt"
           label="created time"
           width="150">
         </el-table-column>
-        <el-table-column
+        <el-table-column sortable
           prop="endedAt"
           label="ended time"
           width="150">
         </el-table-column>
-        <el-table-column
+        <el-table-column sortable
           prop="positiveScore"
           label="p_score"
           width="100">
         </el-table-column>
-        <el-table-column
+        <el-table-column sortable
           prop="negativeScore"
           label="n_score"
           width="100">
         </el-table-column>
       </el-table>
+          <el-pagination
+            v-model:current-page="currentPage"
+            v-model:page-size="pageSize"
+            layout="prev, pager, next"
+            :total="2000"
+            @current-change="pageChange"
+          />
       </div>
     </el-main>
   </el-container>
 
 </el-container>
+
+  <el-dialog title="创建数据集"
+  :visible.sync="formVisible"
+  width="40%"
+  :before-close="handleClose"
+  >
+    <div style="width: 90%; margin: auto">
+      <el-form :model="collectionForm" :rules="rules" ref="collectionForm">
+        <el-form-item label="数据集名称：" prop="name">
+          <el-input v-model="collectionForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="数据集描述：" prop="description">
+          <el-input v-model="collectionForm.description"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="medium" style="width: 70px;height:30px; font-size: 0.6rem " plain="plain" @click="createCollection('collectionForm')">创建</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+  </el-dialog>
 </div>
 </template>
 
 <script>
-import {listAllData} from '@/network/management'
+import {
+  addCollection,
+  addCollectionData,
+  listAllCollection,
+  listAllData,
+  listCollectionData
+} from '@/network/management'
 
 export default {
   name: 'ManagementView',
   mounted () {
     listAllData({
       params: {
-
+        page: this.currentPage - 1,
+        size: 100
       }
     }).then(res => {
       if (res.code === 200) {
@@ -118,20 +215,184 @@ export default {
         })
       }
     })
+    listAllCollection({
+      params: {}
+    }).then(res => {
+      if (res.code === 200) {
+        this.collectionList = res.data.list
+      } else {
+        this.$message({
+          message: res.data.list
+        })
+      }
+    })
   },
   data () {
     return {
+      pageSize: 50,
+      currentPage: 0,
+      currentCollection: -1,
+      formVisible: false,
+      collectionForm: {},
+      chosenCollection: '',
+      chosenData: [],
+      collectionList: [],
       dataList: [],
       search: '',
-      classificationList: []
-
+      classificationList: [],
+      rules: {
+        name: [
+          {required: true, message: '请输入名称', trigger: 'change'}
+        ]
+      }
     }
   },
   methods: {
-
+    pageChange (val) {
+      this.currentPage = val
+      console.log(this.currentPage)
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+      this.getData(this.currentCollection)
+    },
+    addDataToCollection () {
+      if (this.chosenData.length !== 0 && this.chosenCollection !== '') {
+        addCollectionData(this.chosenData, {
+          params: {
+            collectionId: this.chosenCollection,
+          }
+        }).then(res => {
+          if (res.code === 200) {
+            this.$message.success('添加成功！')
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      } else {
+        this.$message.warning('请选择数据!')
+      }
+    },
+    handleClose (done) {
+      this.$confirm('确认关闭?')
+        .then(_ => {
+          this.collectionForm = {}
+          done()
+        })
+        .catch(_ => {})
+    },
+    createCollection (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          addCollection(this.collectionForm).then(res => {
+            console.log(res.result)
+            if (res.code === 200) {
+              this.$message.success('创建成功！')
+              this.formVisible = false
+              this.collectionForm = {}
+              this.refresh()
+            } else {
+              this.$message({
+                message: res.message
+              })
+            }
+          })
+        }
+      })
+    },
+    refresh () {
+      listAllCollection({
+        params: {}
+      }).then(res => {
+        if (res.code === 200) {
+          this.collectionList = res.data.list
+        } else {
+          this.$message({
+            message: res.data.list
+          })
+        }
+      })
+    },
+    handleSelectionChange (val) {
+      this.chosenData = val.map(it => {
+        return it.id
+      })
+      console.log(this.chosenData)
+    },
+    getData (id) {
+      console.log(id)
+      if (id === -1) {
+        listAllData({
+          params: {
+            page: this.currentPage,
+            size: this.pageSize
+          }
+        }).then(res => {
+          if (res.code === 200) {
+            this.dataList = res.data.list
+          } else {
+            this.$message({
+              message: res.data.list
+            })
+          }
+        })
+      } else {
+        listCollectionData({
+          params: {
+            collectionId: id,
+            page: this.currentPage,
+            size: this.pageSize
+          }
+        }).then(res => {
+          if (res.code === 200) {
+            if (this.currentPage > res.data.pages) {
+              this.$message.warning("没有更多数据!")
+              this.dataList = []
+            } else {
+              console.log(res.data)
+              this.dataList = res.data.list
+            }
+          } else {
+            this.$message({
+              message: res.message
+            })
+          }
+        })
+      }
+    }
   }
 }
 </script>
 
 <style scoped>
+@import "../assets/css/public.css";
+@import "../assets/css/jianlisw.css";
+@import "../assets/css/jianlixt.css";
+.el-collapse-item .el-collapse-item__header{
+  border-bottom: 0;
+  border-top: 0;
+  background-color: rgba(255,255,255,0.1);
+}
+
+* {
+  padding:0;
+  margin:0;
+  font-family:"微软雅黑";
+  font-size:12px;
+  font-style:normal
+}
+dd,dl,dt,em,i,p,textarea,a,div {
+  padding:0;
+  margin:0;
+}
+a {
+  text-decoration:none;
+}
+img {
+  border:0;
+}
+ul,li {
+  padding:0;
+  margin:0;
+  list-style:none;
+}
 </style>

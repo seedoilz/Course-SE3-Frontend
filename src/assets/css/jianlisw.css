@@ -22,10 +22,10 @@
 /*问题等级*/
 .wenti_dj{ width:40%; float:left}
 .wenti_bg{ float:left; padding-top:10px; width:60%;}
-.wenti_bg table{border-collapse:collapse;border: 1px solid #00a0e9; color:#fff; width:95%}  
-.wenti_bg td{border-collapse:collapse; border: 1px solid #00a0e9; padding:2px 4px; }  
-.wenti_bg td.green{ color:#05d60f; text-align:center}  
-.wenti_bg td.orange{ color:#d75a07; text-align:center}  
+.wenti_bg table{border-collapse:collapse;border: 1px solid #00a0e9; color:#fff; width:95%}
+.wenti_bg td{border-collapse:collapse; border: 1px solid #00a0e9; padding:2px 4px; }
+.wenti_bg td.green{ color:#05d60f; text-align:center}
+.wenti_bg td.orange{ color:#d75a07; text-align:center}
 
 
 

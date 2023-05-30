@@ -270,36 +270,36 @@ export default {
         } else {
           console.log('username fail', res)
         }
+      })
 
-        // 显示情绪数量图
-        getSentiByVersion({
-          params: {
-            project: this.project
+      // 显示情绪数量图
+      getSentiByVersion({
+        params: {
+          project: this.project
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          console.log('project success', res.data)
+
+          let sentimentQuantityX = []
+          let positiveQuantity = []
+          let negativeQuantity = []
+          let neutralQuantity = []
+          for (let i = 0; i < res.data.length; i++) {
+            sentimentQuantityX.push(res.data[i].version)
+            positiveQuantity.push(res.data[i].positiveNumber)
+            negativeQuantity.push(res.data[i].negativeNumber)
+            neutralQuantity.push(res.data[i].neutralNumber)
           }
-        }).then(res => {
-          if (res.code === 200) {
-            console.log('project success', res.data)
+          this.sentimentQuantityX = sentimentQuantityX
+          this.positiveQuantity = positiveQuantity
+          this.negativeQuantity = negativeQuantity
+          this.neutralQuantity = neutralQuantity
 
-            let sentimentQuantityX = []
-            let positiveQuantity = []
-            let negativeQuantity = []
-            let neutralQuantity = []
-            for (let i = 0; i < res.data.length; i++) {
-              sentimentQuantityX.push(res.data[i].version)
-              positiveQuantity.push(res.data[i].positiveNumber)
-              negativeQuantity.push(res.data[i].negativeNumber)
-              neutralQuantity.push(res.data[i].neutralNumber)
-            }
-            this.sentimentQuantityX = sentimentQuantityX
-            this.positiveQuantity = positiveQuantity
-            this.negativeQuantity = negativeQuantity
-            this.neutralQuantity = neutralQuantity
-
-            // console.log(this.sentimentQuantityX, this.positiveQuantity, this.negativeQuantity, this.neutralQuantity)
-          } else {
-            console.log('project fail', res)
-          }
-        })
+          // console.log(this.sentimentQuantityX, this.positiveQuantity, this.negativeQuantity, this.neutralQuantity)
+        } else {
+          console.log('project fail', res)
+        }
       })
     },
     updateChart () {

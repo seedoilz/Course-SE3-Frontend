@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import MainView from '@/view/MainView.vue'
 import ManagementView from '@/view/ManagementView'
 import AnalysisView from '@/view/AnalysisView'
+import ChartView from '@/view/ChartView'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/',
       name: 'AnalysisView',
       component: AnalysisView
+    },
+    {
+      path: '/chart',
+      name: 'ChartView',
+      component: ChartView
     }
   ]
 })

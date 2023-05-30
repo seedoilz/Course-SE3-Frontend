@@ -26,7 +26,6 @@ export default {
       let chartDom = document.getElementById(this.head)
       let myChart = echarts.init(chartDom)
       let option
-      const colors = ['#5470C6', '#EE6666', '#0a8f53']
 
       option = {
         tooltip: {

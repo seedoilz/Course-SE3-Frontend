@@ -26,6 +26,7 @@ export default {
       let chartDom = document.getElementById(this.head)
       let myChart = echarts.init(chartDom)
       let option
+      console.log(this.head, ': ', this.x1)
 
       const colors = ['#5470C6', '#EE6666', '#0a8f53']
       option = {
@@ -33,18 +34,13 @@ export default {
           trigger: 'axis'
         },
         legend: {
-          data: ['positive', 'negative']
+          data: ['positive', 'negative', 'neutral']
         },
         grid: {
           left: '3%',
           right: '4%',
           bottom: '3%',
           containLabel: true
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
         },
         xAxis: {
           type: 'category',
@@ -61,7 +57,6 @@ export default {
               color: colors[0]
             },
             type: 'line',
-            stack: 'Total',
             data: this.positive
           },
           {
@@ -70,7 +65,6 @@ export default {
               color: colors[1]
             },
             type: 'line',
-            stack: 'Total',
             data: this.negative
           },
           {
@@ -79,7 +73,6 @@ export default {
               color: colors[2]
             },
             type: 'line',
-            stack: 'Total',
             data: this.neutral
           }
         ]
@@ -101,8 +94,5 @@ export default {
 }
 p, h1 {
   color: white;
-}
-.button {
-
 }
 </style>

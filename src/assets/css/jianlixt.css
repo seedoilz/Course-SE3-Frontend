@@ -7,7 +7,7 @@
 #rlzy_cen{ clear:both}
 .xueli_tb{width:354px;height:340px;}
 /*人员能力提升*/
-.ryclts{ padding:10px; height: auto}
+.ryclts{ padding:0;margin-right: 0;width: 100%}
 .ryclts_tb {width:304px;float: left;height:300px; }
 
 /*仪表盘等展示*/

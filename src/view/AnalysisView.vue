@@ -71,20 +71,14 @@
             <b class="data-title-right fr">]</b>
           </div>
 
-          <div class="ryclts" style="height: 1038px">
-            <div id="xjfxzt" style="height:100%">
+          <div class="ryclts">
+            <div id="xjfxzt" style="height:100%; width:100%">
               <MultipleXAxes
-                v-bind:x1="['2015-1', '2015-2', '2015-3', '2015-4', '2015-5', '2015-6', '2015-7', '2015-8', '2015-9', '2015-10', '2015-11', '2015-12']"
-                v-bind:positive="[0.120, 0.132, 0.101, 0.134, 0.90, 0.230, 0.210, 0.1, 0.2, 0.3]"
-                v-bind:negative="[0.220, 0.182, 0.191, 0.234, 0.290, 0.330, 0.310, 0.1, 0.2, 0.3]"
-                txt="折线图中两条折线，分别积极情绪和消极情绪的占比，y轴为占比比例，x1轴为评论的时间,x2轴为版本"
-                head="表4">
-              </MultipleXAxes>
-              <MultipleXAxes
-                             v-bind:x1="this.$data.proportionX"
-                             v-bind:positive="this.$data.proportionPositive"
-                             v-bind:negative="this.$data.proportionNegative"
-                             v-bind:neutral="this.$data.proportionNeutral"
+                             v-bind:x1="proportionX"
+                             v-bind:positive="proportionPositive"
+                             v-bind:negative="proportionNegative"
+                             v-bind:neutral="proportionNeutral"
+                             v-if="proportionNeutral.length > 0"
                              txt="折线图中两条折线，分别积极情绪和消极情绪的占比，y轴为占比比例，x1轴为评论的时间"
                              head="表1">
               </MultipleXAxes>
@@ -94,7 +88,7 @@
 
       </div>
       <div class="center_zs fl">
-        <div class="data-box1 box1-back" style="height: 1175px">
+        <div class="data-box1 box1-back" style="height: 800px">
           <i class="topL"></i>
           <i class="topR"></i>
           <i class="bottomL"></i>
@@ -119,12 +113,13 @@
             <b class="data-title-right">]</b>
           </div>
           <div class="ryclts">
-            <div id="xjfxzt" style="height:100%">
+            <div id="xjfxzt" style="height:100%; width:100%">
                   <MultipleXAxes
                                  v-bind:x1="userSentimentX"
                                  v-bind:positive="userPositiveScore"
                                  v-bind:negative="userNegativeScore"
                                  v-bind:neutral="userNeutralScore"
+                                 v-if="userSentimentX.length > 0"
                                  txt="输入用户名，x1轴为用户评论时间，y轴为情绪值"
                                  head="表2">
                   </MultipleXAxes>
@@ -143,13 +138,14 @@
             <b class="data-title-right">]</b>
           </div>
           <div class="ryclts">
-            <div id="xjfxzt" style="height:100%">
+            <div id="xjfxzt" style="height:100%; width:100%">
                   <BasicBar txt="x轴为不同版本，y轴为积极情绪和消极情绪的数量"
                             head="表3"
                             v-bind:positive="positiveQuantity"
                             v-bind:negative="negativeQuantity"
                             v-bind:neutral="neutralQuantity"
-                            v-bind:x="sentimentQuantityX">
+                            v-bind:x="sentimentQuantityX"
+                            v-if="sentimentQuantityX.length > 0">
                   </BasicBar>
             </div>
           </div>
@@ -220,8 +216,12 @@ export default {
         if (response.code === 200) {
           console.log('proportion success: ', response.data)
 
+          let positiveList = []
+          let negativeList = []
+          let neutralList = []
+          let proportionX = []
           for (let i = 0; i < response.data.length; i++) {
-            this.proportionX.push(response.data[i].beginTime)
+            proportionX.push(response.data[i].beginTime)
 
             let sum = response.data[i].negativeNumber + response.data[i].positiveNumber + response.data[i].neutralNumber
 
@@ -229,10 +229,14 @@ export default {
             let proportionNegative = response.data[i].negativeNumber / sum
             let proportionNeutral = response.data[i].neutralNumber / sum
 
-            this.proportionPositive.push(proportionPositive.toFixed(2) * 1)
-            this.proportionNegative.push(proportionNegative.toFixed(2) * 1)
-            this.proportionNeutral.push(proportionNeutral.toFixed(2) * 1)
+            positiveList.push(proportionPositive.toFixed(2) * 1)
+            negativeList.push(proportionNegative.toFixed(2) * 1)
+            neutralList.push(proportionNeutral.toFixed(2) * 1)
           }
+          this.proportionX = proportionX
+          this.proportionPositive = positiveList
+          this.proportionNegative = negativeList
+          this.proportionNeutral = neutralList
 
           // console.log(this.proportionX, this.proportionPositive, this.proportionNegative, this.proportionNeutral)
         } else {
@@ -250,11 +254,17 @@ export default {
         if (res.code === 200) {
           console.log('username success: ', res.data)
 
+          let userSentimentX = []
+          let userPositiveScore = []
+          let userNegativeScore = []
           for (let i = 0; i < res.data.length; i++) {
-            this.userSentimentX.push(res.data[i].createdAt)
-            this.userPositiveScore.push(res.data[i].positiveScore)
-            this.userNegativeScore.push(res.data[i].negativeScore)
+            userSentimentX.push(res.data[i].createdAt)
+            userPositiveScore.push(res.data[i].positiveScore)
+            userNegativeScore.push(res.data[i].negativeScore)
           }
+          this.userSentimentX = userSentimentX
+          this.userPositiveScore = userPositiveScore
+          this.userNegativeScore = userNegativeScore
 
           // console.log(this.userSentimentX, this.userPositiveScore, this.userNegativeScore)
         } else {
@@ -270,19 +280,30 @@ export default {
           if (res.code === 200) {
             console.log('project success', res.data)
 
+            let sentimentQuantityX = []
+            let positiveQuantity = []
+            let negativeQuantity = []
+            let neutralQuantity = []
             for (let i = 0; i < res.data.length; i++) {
-              this.sentimentQuantityX.push(res.data[i].version)
-              this.positiveQuantity.push(res.data[i].positiveNumber)
-              this.negativeQuantity.push(res.data[i].negativeNumber)
-              this.neutralQuantity.push(res.data[i].neutralNumber)
+              sentimentQuantityX.push(res.data[i].version)
+              positiveQuantity.push(res.data[i].positiveNumber)
+              negativeQuantity.push(res.data[i].negativeNumber)
+              neutralQuantity.push(res.data[i].neutralNumber)
             }
+            this.sentimentQuantityX = sentimentQuantityX
+            this.positiveQuantity = positiveQuantity
+            this.negativeQuantity = negativeQuantity
+            this.neutralQuantity = neutralQuantity
 
-            console.log(this.sentimentQuantityX, this.positiveQuantity, this.negativeQuantity, this.neutralQuantity)
+            // console.log(this.sentimentQuantityX, this.positiveQuantity, this.negativeQuantity, this.neutralQuantity)
           } else {
             console.log('project fail', res)
           }
         })
       })
+    },
+    updateChart () {
+      console.log(this.proportionNeutral)
     }
   }
 }

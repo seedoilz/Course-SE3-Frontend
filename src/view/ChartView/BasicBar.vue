@@ -30,95 +30,28 @@ export default {
 
       option = {
         tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow'
-          }
+          trigger: 'axis'
         },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
+        legend: {
+          data: ['positive', 'negative', 'neutral']
         },
-        xAxis: [
-          {
-            type: 'category',
-            data: this.x,
-            axisTick: {
-              alignWithLabel: true
-            }
-          }
-        ],
-        yAxis: [
-          {
-            type: 'value',
-            name: 'positive',
-            position: 'left',
-            alignTicks: true,
-            axisLine: {
-              show: true,
-              lineStyle: {
-                // 设置坐标轴颜色
-                color: colors[0]
-              }
-            },
-            axisLabel: {
-              formatter: '{value}'
-            }
-          },
-          {
-            type: 'value',
-            name: 'negative',
-            position: 'right',
-            alignTicks: true,
-            axisLine: {
-              show: true,
-              lineStyle: {
-                // 设置坐标轴颜色
-                color: colors[1]
-              }
-            },
-            axisLabel: {
-              formatter: '{value}'
-            }
-          },
-          {
-            type: 'value',
-            name: 'neutral',
-            position: 'right',
-            alignTicks: true,
-            axisLine: {
-              show: true,
-              lineStyle: {
-                // 设置坐标轴颜色
-                color: colors[2]
-              }
-            },
-            axisLabel: {
-              formatter: '{value}'
-            }
-          }
-        ],
-        series: [
-          {
-            name: 'positive',
-            type: 'bar',
-            data: this.positive
-          },
-          {
-            name: 'negative',
-            type: 'bar',
-            yAxisIndex: 1,
-            data: this.negative
-          },
-          {
-            name: 'neutral',
-            type: 'bar',
-            yAxisIndex: 2,
-            data: this.neutral
-          }
-        ]
+        xAxis: {
+          data: this.x
+        },
+        yAxis: {},
+        series: [{
+          name: 'positive',
+          type: 'bar',
+          data: this.positive
+        }, {
+          name: 'negative',
+          type: 'bar',
+          data: this.negative
+        }, {
+          name: 'neutral',
+          type: 'bar',
+          data: this.neutral
+        }]
       }
 
       option && myChart.setOption(option)
@@ -137,8 +70,6 @@ p, h1 {
 }
 .BasicBar {
   text-align: center;
-}
-.button {
-
+  width: 100%;
 }
 </style>

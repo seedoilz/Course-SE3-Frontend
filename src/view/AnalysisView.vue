@@ -35,7 +35,7 @@
                 </el-select>
                 <br><br>
                 <div class="block">
-                  <span class="demonstration">请选择日期</span>
+                  <span>请选择日期</span><br>
                   <el-date-picker
                     v-model="beginEndData"
                     type="daterange"
@@ -46,10 +46,11 @@
                     end-placeholder="结束日期"
                     format="yyyy-MM-dd"
                     value-format="yyyy-MM-dd"
-                    :picker-options="pickerOptions">
+                    class="date-picker">
                   </el-date-picker>
                 </div>
-                <el-button @click="showCountChart1" type="primary" plain class="button" size="small">查看</el-button>
+                <el-input v-model="username" placeholder="请输入想要查看的用户名" class="el-input"></el-input><br>
+                <el-button @click="showProportion" type="primary" plain class="button" size="small">查看</el-button>
               </div>
               <div class="xmgl_tb none">
 
@@ -72,10 +73,11 @@
           <div class="ryclts" style="height: 1038px">
             <div id="xjfxzt" style="height:100%">
               <MultipleXAxes
-                             v-bind:x1="['2015-1', '2015-2', '2015-3', '2015-4', '2015-5', '2015-6', '2015-7', '2015-8', '2015-9', '2015-10', '2015-11', '2015-12']"
-                             v-bind:positive="[0.120, 0.132, 0.101, 0.134, 0.90, 0.230, 0.210, 0.1, 0.2, 0.3]"
-                             v-bind:negative="[0.220, 0.182, 0.191, 0.234, 0.290, 0.330, 0.310, 0.1, 0.2, 0.3]"
-                             txt="折线图中两条折线，分别积极情绪和消极情绪的占比，y轴为占比比例，x1轴为评论的时间,x2轴为版本"
+                             v-bind:x1=proportionX
+                             v-bind:positive=proportionPositive
+                             v-bind:negative=proportionNegative
+                             v-bind:neutral=proportionNeutral
+                             txt="折线图中两条折线，分别积极情绪和消极情绪的占比，y轴为占比比例，x1轴为评论的时间"
                              head="表1">
               </MultipleXAxes>
             </div>
@@ -105,16 +107,17 @@
           <i class="bottomR"></i>
           <div class="data-title">
             <b class="data-title-left">[</b>
-            <span>用户情绪图</span>
+            <span>用户情绪值图</span>
             <b class="data-title-right">]</b>
           </div>
           <div class="ryclts">
             <div id="xjfxzt" style="height:100%">
                   <MultipleXAxes
-                                 v-bind:x1="['2016-1', '2016-2', '2016-3', '2016-4', '2016-5', '2016-6', '2016-7', '2016-8', '2016-9', '2016-10', '2016-11', '2016-12']"
-                                 v-bind:positive="[1, 2, 1, 3, 0, 2, 1, 1, 3, 0]"
-                                 v-bind:negative="[2, 1, 1, 4, 2, 3, 0, 1, 3, 0]"
-                                 txt="输入用户名，x1轴为用户评论时间，x2轴为版本，y轴为情绪值"
+                                 v-bind:x1=userSentimentX
+                                 v-bind:positive=userPositiveScore
+                                 v-bind:negative=userNegativeScore
+                                 v-bind:neutral=userNeutralScore
+                                 txt="输入用户名，x1轴为用户评论时间，y轴为情绪值"
                                  head="表2">
                   </MultipleXAxes>
             </div>
@@ -135,9 +138,10 @@
             <div id="xjfxzt" style="height:100%">
                   <BasicBar txt="x轴为不同版本，y轴为积极情绪和消极情绪的数量"
                             head="表3"
-                            v-bind:positive="[23, 25, 43, 13, 25, 14]"
-                            v-bind:negative="[17, 12, 14, 15, 35, 24]"
-                            v-bind:x="['v1.1', 'v1.2', 'v1.3', 'v1.4', 'v1.5', 'v1.6']">
+                            v-bind:positive=positiveQuantity
+                            v-bind:negative=negativeQuantity
+                            v-bind:neutral=neutralQuantity
+                            v-bind:x=sentimentQuantityX>
                   </BasicBar>
             </div>
           </div>
@@ -152,7 +156,7 @@
 <script>
 import MultipleXAxes from '@/view/ChartView/Multiple-X-Axes.vue'
 import BasicBar from '@/view/ChartView/BasicBar.vue'
-import {getSentiByTime} from '@/network/main'
+import {getSentiByTime, getSentiByUser} from '@/network/main'
 import {listAllCollection} from '@/network/management'
 
 export default {
@@ -162,36 +166,20 @@ export default {
     return {
       collectionList: [],
       chosenCollectionID: '',
-      pickerOptions: {
-        shortcuts: [{
-          text: '最近一周',
-          onClick (picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '最近一个月',
-          onClick (picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '最近三个月',
-          onClick (picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-            picker.$emit('pick', [start, end])
-          }
-        }]
-      },
       beginEndData: '',
+      username: '',
       proportionX: [],
-      proportionY: []
+      proportionPositive: [],
+      proportionNegative: [],
+      proportionNeutral: [],
+      userSentimentX: [],
+      userPositiveScore: [],
+      userNegativeScore: [],
+      userNeutralScore: [],
+      sentimentQuantityX: [],
+      positiveQuantity: [],
+      negativeQuantity: [],
+      neutralQuantity: []
     }
   },
   mounted () {
@@ -208,7 +196,8 @@ export default {
     })
   },
   methods: {
-    showCountChart1 () {
+    showProportion () {
+      // 显示情绪占比图
       getSentiByTime({
         params: {
           collectionId: this.chosenCollectionID,
@@ -217,9 +206,39 @@ export default {
         }
       }).then(response => {
         if (response.code === 200) {
-          console.log(response.data)
+          console.log('proportion success: ' + response.data)
+
+          for (let i = 0; i < response.data.length; i++) {
+            this.proportionX.push(response.data[i].beginTime)
+            let sum = response.data[i].negativeNumber + response.data[i].positiveNumber + response.data[i].neutralNumber
+
+            let proportionPositive = response.data[i].positiveNumber / sum
+            let proportionNegative = response.data[i].negativeNumber / sum
+            let proportionNeutral = response.data[i].neutralNumber / sum
+
+            this.proportionPositive.push(proportionPositive.toFixed(2) * 1)
+            this.proportionNegative.push(proportionNegative.toFixed(2) * 1)
+            this.proportionNeutral.push(proportionNeutral.toFixed(2) * 1)
+          }
+
+          // console.log(this.proportionX, this.proportionPositive, this.proportionNegative, this.proportionNeutral)
         } else {
-          console.log(response)
+          console.log('proportion fail: ' + response)
+        }
+      })
+
+      // 显示用户情绪图
+      getSentiByUser({
+        params: {
+          collectionId: this.chosenCollectionID,
+          username: this.username
+        }
+      }).then(res => {
+        console.log(this.chosenCollectionID, this.username)
+        if (res.code === 200) {
+          console.log('username success: ' + res.data)
+        } else {
+          console.log('username fail' + res)
         }
       })
     }
@@ -259,6 +278,14 @@ ul,li {
   padding:0;
   color:#000;
   background:#000c3b;
+}
+.date-picker {
+  width: 80%;
+  margin-bottom: 20px;
+}
+.el-input {
+  width: 80%;
+  margin-bottom: 20px;
 }
 
 </style>

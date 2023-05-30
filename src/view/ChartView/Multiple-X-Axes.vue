@@ -1,6 +1,6 @@
 <template>
   <div class="MultipleXAxes">
-    <h1>{{this.head}}</h1>
+<!--    <h1>{{this.head}}</h1>-->
     <div :id="head" class="chart"></div>
     <p>{{this.txt}}</p>
   </div>
@@ -14,6 +14,7 @@ export default {
     x1: Array,
     positive: Array,
     negative: Array,
+    neutral: Array,
     txt: String,
     head: String
   },
@@ -26,7 +27,7 @@ export default {
       let myChart = echarts.init(chartDom)
       let option
 
-      const colors = ['#5470C6', '#EE6666']
+      const colors = ['#5470C6', '#EE6666', '#0a8f53']
       option = {
         tooltip: {
           trigger: 'axis'
@@ -71,6 +72,15 @@ export default {
             type: 'line',
             stack: 'Total',
             data: this.negative
+          },
+          {
+            name: 'neutral',
+            textStyle: {
+              color: colors[2]
+            },
+            type: 'line',
+            stack: 'Total',
+            data: this.neutral
           }
         ]
       }

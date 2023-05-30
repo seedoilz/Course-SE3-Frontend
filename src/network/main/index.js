@@ -7,5 +7,5 @@ export const corpusOption = (config) => request._post(API.CORPUS_OPTION, null, c
 
 export const getSentiByTime = (config) => request._post(API.SENTI_TIME, null, config)
 
-export const getSentiByVersion = (data, config) => request._post(API.SENTI_VERSION, data, config)
-export const getSentiByUser = (data, config) => request._post(API.SENTI_USER, data, config)
+export const getSentiByVersion = (config) => request._post(API.SENTI_VERSION, null, config)
+export const getSentiByUser = (config) => request._post(API.SENTI_USER, null, config)

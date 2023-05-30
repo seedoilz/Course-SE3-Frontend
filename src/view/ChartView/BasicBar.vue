@@ -1,6 +1,6 @@
 <template>
   <div class="BasicBar">
-    <h1>{{this.head}}</h1>
+<!--    <h1>{{this.head}}</h1>-->
     <div :id="head" class="chart"></div>
     <p>{{this.txt}}</p>
   </div>
@@ -14,6 +14,7 @@ export default {
     x: Array,
     positive: Array,
     negative: Array,
+    neutral: Array,
     txt: String,
     head: String
   },
@@ -25,7 +26,7 @@ export default {
       let chartDom = document.getElementById(this.head)
       let myChart = echarts.init(chartDom)
       let option
-      const colors = ['#5470C6', '#91CC75']
+      const colors = ['#5470C6', '#EE6666', '#0a8f53']
 
       option = {
         tooltip: {
@@ -81,6 +82,22 @@ export default {
             axisLabel: {
               formatter: '{value}'
             }
+          },
+          {
+            type: 'value',
+            name: 'neutral',
+            position: 'right',
+            alignTicks: true,
+            axisLine: {
+              show: true,
+              lineStyle: {
+                // 设置坐标轴颜色
+                color: colors[2]
+              }
+            },
+            axisLabel: {
+              formatter: '{value}'
+            }
           }
         ],
         series: [
@@ -94,6 +111,12 @@ export default {
             type: 'bar',
             yAxisIndex: 1,
             data: this.negative
+          },
+          {
+            name: 'neutral',
+            type: 'bar',
+            yAxisIndex: 2,
+            data: this.neutral
           }
         ]
       }

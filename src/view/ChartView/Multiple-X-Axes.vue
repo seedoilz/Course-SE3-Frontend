@@ -34,7 +34,10 @@ export default {
           trigger: 'axis'
         },
         legend: {
-          data: ['positive', 'negative', 'neutral']
+          data: ['positive', 'negative', 'neutral'],
+          textStyle: {
+            color: '#fff' // 设置图例文字颜色为白色
+          }
         },
         grid: {
           left: '3%',
@@ -45,10 +48,21 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: this.x1
+          data: this.x1,
+          axisLabel: {
+            color: '#fff' // 设置x轴刻度标签的颜色为白色
+          }
         },
         yAxis: {
-          type: 'value'
+          type: 'value',
+          axisLine: {
+            lineStyle: {
+              color: '#fff' // 设置y轴线的颜色为白色
+            }
+          },
+          axisLabel: {
+            color: '#fff' // 设置y轴刻度标签的颜色为白色
+          }
         },
         series: [
           {

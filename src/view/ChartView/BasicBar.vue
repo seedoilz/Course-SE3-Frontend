@@ -33,12 +33,27 @@ export default {
           trigger: 'axis'
         },
         legend: {
-          data: ['positive', 'negative', 'neutral']
+          data: ['positive', 'negative', 'neutral'],
+          textStyle: {
+            color: '#fff' // 设置图例文字颜色为白色
+          }
         },
         xAxis: {
-          data: this.x
+          data: this.x,
+          axisLabel: {
+            color: '#fff' // 设置x轴刻度标签的颜色为白色
+          }
         },
-        yAxis: {},
+        yAxis: {
+          axisLine: {
+            lineStyle: {
+              color: '#fff' // 设置y轴线的颜色为白色
+            }
+          },
+          axisLabel: {
+            color: '#fff' // 设置y轴刻度标签的颜色为白色
+          }
+        },
         series: [{
           name: 'positive',
           type: 'bar',

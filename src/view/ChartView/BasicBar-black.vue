@@ -1,5 +1,5 @@
 <template>
-  <div class="BasicBar">
+  <div class="BasicBar" style="display: flex;flex-direction: column; justify-content: center;align-items: center;">
     <h1>{{this.head}}</h1>
     <p>{{this.txt}}</p>
     <div :id="head" class="chart"></div>
@@ -24,8 +24,20 @@ export default {
   methods: {
     showCountChart () {
       let chartDom = document.getElementById(this.head)
+      let resizeMainContainer = function () {
+        chartDom.style.width = window.innerWidth * 0.7 + 'px'
+        chartDom.style.height = window.innerHeight * 0.5 + 'px'
+      }
+
+      resizeMainContainer()
+
       let myChart = echarts.init(chartDom)
+      window.onresize = () => {
+        resizeMainContainer()
+        myChart.resize()
+      }
       let option
+      console.log(this.head, ': ', this.x)
 
       option = {
         tooltip: {
@@ -70,5 +82,13 @@ p, h1 {
 .BasicBar {
   text-align: center;
   width: 100%;
+  /*border-radius: 4px;*/
+  /*border: 1px solid #EBEEF5;*/
+  /*box-shadow: 2px 2px 5px #ccc; !* 添加2像素偏移的5像素模糊灰色阴影 *!*/
+  /*background-color: #FFF;*/
+  /*overflow: hidden;*/
+  /*color: #303133;*/
+  //-webkit-transition: .3s;
+  //transition: .3s;
 }
 </style>

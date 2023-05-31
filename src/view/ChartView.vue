@@ -1,16 +1,17 @@
 <template>
   <div>
-    <el-select v-model="chosenCollectionID">
-      <el-option v-for="it in collectionList"
-                 :label="it.name"
-                 :key="it.id"
-                 :value="it.id">
-      </el-option>
-    </el-select>
+    <div class="select">
+      <el-select v-model="chosenCollectionID">
+        <el-option v-for="it in collectionList"
+                   :label="it.name"
+                   :key="it.id"
+                   :value="it.id">
+        </el-option>
+      </el-select>
+    </div>
 
-    <div class="chart-box">
-      <div class="block">
-        <span>请选择日期</span><br>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
         <el-date-picker
           v-model="beginEndData"
           type="daterange"
@@ -23,45 +24,55 @@
           value-format="yyyy-MM-dd"
           class="date-picker">
         </el-date-picker>
+        <el-button style="float: right; padding: 3px 0; margin-top: 20px" type="text" @click="proportionChart">情绪占比</el-button>
       </div>
-      <MultipleXAxes
-        v-bind:x1="proportionX"
-        v-bind:positive="proportionPositive"
-        v-bind:negative="proportionNegative"
-        v-bind:neutral="proportionNeutral"
-        v-if="proportionNeutral.length > 0"
-        txt="折线图中两条折线，分别积极情绪和消极情绪的占比，y轴为占比比例，x1轴为评论的时间"
-        head="表1">
-      </MultipleXAxes>
-      <el-button @click="proportionChart" type="primary" plain class="button">表1</el-button>
-    </div>
+      <div class="text item">
+        <MultipleXAxes
+          ref="proportion-chart"
+          v-bind:x1="proportionX"
+          v-bind:positive="proportionPositive"
+          v-bind:negative="proportionNegative"
+          v-bind:neutral="proportionNeutral"
+          txt="折线图中两条折线，分别积极情绪和消极情绪的占比，y轴为占比比例，x1轴为评论的时间"
+          head="表1">
+        </MultipleXAxes>
+      </div>
+    </el-card>
 
-    <div class="chart-box">
-      <el-input v-model="username" placeholder="请输入想要查看的用户名" class="el-input"></el-input>
-      <MultipleXAxes
-        v-bind:x1="userSentimentX"
-        v-bind:positive="userPositiveScore"
-        v-bind:negative="userNegativeScore"
-        v-bind:neutral="userNeutralScore"
-        v-if="userSentimentX.length > 0"
-        txt="输入用户名，x1轴为用户评论时间，y轴为情绪值"
-        head="表2">
-      </MultipleXAxes>
-      <br><el-button @click="userChart" type="primary" plain class="button">表2</el-button>
-    </div>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <el-input v-model="username" placeholder="请输入想要查看的用户名" class="el-input"></el-input><br>
+        <el-button style="float: right; padding: 3px 0; margin-top: -50px" type="text" @click="userChart">用户情绪</el-button>
+      </div>
+      <div class="text item">
+        <MultipleXAxes
+          ref="user-chart"
+          v-bind:x1="userSentimentX"
+          v-bind:positive="userPositiveScore"
+          v-bind:negative="userNegativeScore"
+          v-bind:neutral="userNeutralScore"
+          txt="输入用户名，x1轴为用户评论时间，y轴为情绪值"
+          head="表2">
+        </MultipleXAxes>
+      </div>
+    </el-card>
 
-    <div class="chart-box">
-      <el-input v-model="project" placeholder="请输入想要查看的项目名" class="el-input"></el-input>
-      <BasicBar txt="x轴为不同版本，y轴为积极情绪和消极情绪的数量"
-                head="表3"
-                v-bind:positive="positiveQuantity"
-                v-bind:negative="negativeQuantity"
-                v-bind:neutral="neutralQuantity"
-                v-bind:x="sentimentQuantityX"
-                v-if="sentimentQuantityX.length > 0">
-      </BasicBar>
-      <br><el-button @click="quantityChart" type="primary" plain class="button">表3</el-button>
-    </div>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <el-input v-model="project" placeholder="请输入想要查看的用户名" class="el-input"></el-input><br>
+        <el-button style="float: right; padding: 3px 0; margin-top: -50px" type="text" @click="quantityChart">项目情绪</el-button>
+      </div>
+      <div class="text item">
+        <BasicBar txt="x轴为不同版本，y轴为积极情绪和消极情绪的数量"
+                  head="表3"
+                  ref="quantity-chart"
+                  v-bind:positive="positiveQuantity"
+                  v-bind:negative="negativeQuantity"
+                  v-bind:neutral="neutralQuantity"
+                  v-bind:x="sentimentQuantityX">
+        </BasicBar>
+      </div>
+    </el-card>
   </div>
 </template>
 
@@ -150,6 +161,10 @@ export default {
         } else {
           console.log('proportion fail: ', response)
         }
+      }).then(() => {
+        setTimeout(() => {
+          this.$refs['proportion-chart'].showMultipleXAxesChart()
+        }, 500)
       })
     },
     userChart () {
@@ -179,6 +194,10 @@ export default {
         } else {
           console.log('username fail', res)
         }
+      }).then(() => {
+        setTimeout(() => {
+          this.$refs['user-chart'].showMultipleXAxesChart()
+        }, 500)
       })
     },
     quantityChart () {
@@ -210,6 +229,10 @@ export default {
         } else {
           console.log('project fail', res)
         }
+      }).then(() => {
+        setTimeout(() => {
+          this.$refs['quantity-chart'].showCountChart()
+        }, 500)
       })
     }
   }
@@ -217,19 +240,51 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/css/public.css";
-@import "../assets/css/jianlisw.css";
-@import "../assets/css/jianlixt.css";
 .date-picker {
   width: 80%;
   margin-bottom: 20px;
+  margin-top: 10px;
 }
 .el-input {
   width: 80%;
+  margin-top: 10px;
   margin-bottom: 20px;
+  margin-left: -60px;
 }
 .button {
   margin-bottom: 20px;
 }
+.select {
+  width: 80%;
+  margin-bottom: 10vh;
+  margin-top: 10vh;
+  margin-left: 10%;
+}
+.chart-box {
 
+}
+.text {
+  font-size: 14px;
+}
+
+.item {
+  margin-bottom: 18px;
+  margin-left: 10%;
+  width: 80%;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both
+}
+
+.box-card {
+  width: 80%;
+  margin-bottom: 10vh;
+  margin-top: 10vh;
+  margin-left: 10%;
+}
 </style>

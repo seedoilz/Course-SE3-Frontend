@@ -1,5 +1,5 @@
 <template>
-  <div class="MultipleXAxes">
+  <div class="MultipleXAxes" style="display: flex;flex-direction: column; justify-content: center;align-items: center;">
     <h1>{{this.head}}</h1>
     <p>{{this.txt}}</p>
     <div :id="head" class="chart"></div>
@@ -24,7 +24,18 @@ export default {
   methods: {
     showMultipleXAxesChart () {
       let chartDom = document.getElementById(this.head)
+      let resizeMainContainer = function () {
+        chartDom.style.width = window.innerWidth * 0.7 + 'px'
+        chartDom.style.height = window.innerHeight * 0.5 + 'px'
+      }
+
+      resizeMainContainer()
+
       let myChart = echarts.init(chartDom)
+      window.onresize = () => {
+        resizeMainContainer()
+        myChart.resize()
+      }
       let option
       console.log(this.head, ': ', this.x1)
 
@@ -80,11 +91,14 @@ export default {
 
 <style>
 .chart {
-  width: 80%;
-  height:400px;
+  width: 100%;
+  height: 100%;
+
 }
 .MultipleXAxes {
   height: 80%;
+  width: 100%;
+  margin: 0;
 }
 p, h1 {
   color: black;

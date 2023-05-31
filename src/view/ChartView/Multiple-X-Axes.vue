@@ -99,12 +99,14 @@ export default {
 </script>
 
 <style>
-.chart {
+.MultipleXAxes .chart {
   width: 80%;
   height:400px;
 }
 .MultipleXAxes {
   height: 80%;
+  display: grid;
+  place-items: center;
 }
 p, h1 {
   color: white;

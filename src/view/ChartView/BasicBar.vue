@@ -75,15 +75,17 @@ export default {
 </script>
 
 <style>
-.chart {
+.BasicBar .chart {
   width: 80%;
-  height:400px;
+  top: 20px;
+  height: 350px;
 }
-p, h1 {
+.BasicBar p, h1 {
   color: white;
 }
 .BasicBar {
-  text-align: center;
-  width: 100%;
+  height: 80%;
+  display: grid;
+  place-items: center;
 }
 </style>

@@ -10,7 +10,7 @@
     <div class="zhenwen">
       <div class="left_zs fl">
         <!-- 项目概览 -->
-        <div class="data-box1 left_tb fl">
+        <div class="data-box1 left_tb fl" style="height: 383px">
           <i class="topL"></i>
           <i class="topR"></i>
           <i class="bottomL"></i>
@@ -88,7 +88,7 @@
 
       </div>
       <div class="center_zs fl">
-        <div class="data-box1 box1-back" style="height: 800px">
+        <div class="data-box1 box1-back" style="height: 891px">
           <i class="topL"></i>
           <i class="topR"></i>
           <i class="bottomL"></i>
@@ -113,7 +113,7 @@
             <b class="data-title-right">]</b>
           </div>
           <div class="ryclts">
-            <div id="xjfxzt" style="height:100%; width:100%">
+            <div id="xjfxzt" >
                   <MultipleXAxes
                                  v-bind:x1="userSentimentX"
                                  v-bind:positive="userPositiveScore"
@@ -138,7 +138,7 @@
             <b class="data-title-right">]</b>
           </div>
           <div class="ryclts">
-            <div id="xjfxzt" style="height:100%; width:100%">
+            <div id="xjfxzt">
                   <BasicBar txt="x轴为不同版本，y轴为积极情绪和消极情绪的数量"
                             head="表3"
                             v-bind:positive="positiveQuantity"
@@ -349,6 +349,11 @@ ul,li {
 .el-input {
   width: 80%;
   margin-bottom: 20px;
+}
+.button{
+  background-color: #00a0e9;
+  color: white;
+  padding: 20px;
 }
 
 </style>

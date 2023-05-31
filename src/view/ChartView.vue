@@ -31,6 +31,7 @@
         <div class="text item">
           <MultipleXAxes
             ref="proportion-chart"
+            v-bind:axisName="['positive', 'negative', 'neutral']"
             v-bind:x1="proportionX"
             v-bind:positive="proportionPositive"
             v-bind:negative="proportionNegative"
@@ -48,10 +49,11 @@
         <div class="text item">
           <MultipleXAxes
             ref="user-chart"
+            v-bind:axisName="['positive', 'negative', 'overall']"
             v-bind:x1="userSentimentX"
             v-bind:positive="userPositiveScore"
             v-bind:negative="userNegativeScore"
-            v-bind:neutral="userNeutralScore"
+            v-bind:neutral="userOverall"
             txt="输入用户名，x1轴为用户评论时间，y轴为情绪值"
             head="表2">
           </MultipleXAxes>
@@ -166,7 +168,7 @@ export default {
       userSentimentX: [],
       userPositiveScore: [],
       userNegativeScore: [],
-      userNeutralScore: [],
+      userOverall: [],
 
       sentimentQuantityX: [],
       positiveQuantity: [],
@@ -188,6 +190,13 @@ export default {
     })
   },
   methods: {
+    getOverall () {
+      let overall = []
+      for (let i = 0; i < this.userPositiveScore.length; i++) {
+        overall.push(this.userPositiveScore[i] + this.userNegativeScore[i])
+      }
+      return overall
+    },
     proportionChart () {
       // 显示情绪占比图
       getSentiByTime({
@@ -254,6 +263,7 @@ export default {
           this.userSentimentX = userSentimentX
           this.userPositiveScore = userPositiveScore
           this.userNegativeScore = userNegativeScore
+          this.userOverall = this.getOverall()
 
           // console.log(this.userSentimentX, this.userPositiveScore, this.userNegativeScore)
         } else {

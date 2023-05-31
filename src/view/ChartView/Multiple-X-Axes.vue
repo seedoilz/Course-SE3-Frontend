@@ -12,6 +12,7 @@ export default {
   name: 'Multiple-X-Axes',
   props: {
     x1: Array,
+    axisName: Array,
     positive: Array,
     negative: Array,
     neutral: Array,
@@ -26,7 +27,7 @@ export default {
       let chartDom = document.getElementById(this.head)
       let myChart = echarts.init(chartDom)
       let option
-      console.log(this.head, ': ', this.x1)
+      console.log(this.axisName)
 
       const colors = ['#5470C6', '#EE6666', '#0a8f53']
       option = {
@@ -34,7 +35,7 @@ export default {
           trigger: 'axis'
         },
         legend: {
-          data: ['positive', 'negative', 'neutral'],
+          data: this.axisName,
           textStyle: {
             color: '#fff' // 设置图例文字颜色为白色
           }
@@ -66,7 +67,7 @@ export default {
         },
         series: [
           {
-            name: 'positive',
+            name: this.axisName[0],
             textStyle: {
               color: colors[0]
             },
@@ -74,7 +75,7 @@ export default {
             data: this.positive
           },
           {
-            name: 'negative',
+            name: this.axisName[1],
             textStyle: {
               color: colors[1]
             },
@@ -82,7 +83,7 @@ export default {
             data: this.negative
           },
           {
-            name: 'neutral',
+            name: 'xxxx',
             textStyle: {
               color: colors[2]
             },

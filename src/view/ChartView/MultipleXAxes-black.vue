@@ -12,6 +12,7 @@ export default {
   name: 'Multiple-X-Axes',
   props: {
     x1: Array,
+    axisName: Array,
     positive: Array,
     negative: Array,
     neutral: Array,
@@ -37,7 +38,7 @@ export default {
         myChart.resize()
       }
       let option
-      console.log(this.head, ': ', this.x1)
+      console.log(this.head, 'xxxxxx ', this.x1)
 
       const colors = ['#5470C6', '#EE6666', '#0a8f53']
       option = {
@@ -45,7 +46,7 @@ export default {
           trigger: 'axis'
         },
         legend: {
-          data: ['positive', 'negative', 'neutral']
+          data: this.axisName
         },
         xAxis: {
           type: 'category',
@@ -57,7 +58,7 @@ export default {
         },
         series: [
           {
-            name: 'positive',
+            name: this.axisName[0],
             textStyle: {
               color: colors[0]
             },
@@ -65,7 +66,7 @@ export default {
             data: this.positive
           },
           {
-            name: 'negative',
+            name: this.axisName[1],
             textStyle: {
               color: colors[1]
             },
@@ -73,7 +74,7 @@ export default {
             data: this.negative
           },
           {
-            name: 'neutral',
+            name: this.axisName[2],
             textStyle: {
               color: colors[2]
             },

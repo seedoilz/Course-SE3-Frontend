@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import MainView from '@/view/MainView.vue'
 import ManagementView from '@/view/ManagementView'
-import AnalysisView from '@/view/AnalysisView'
 import ChartView from '@/view/ChartView'
+import wordCloudView from '@/view/WordCloudView'
 
 Vue.use(Router)
 
@@ -21,8 +21,8 @@ export default new Router({
     },
     {
       path: '/',
-      name: 'AnalysisView',
-      component: AnalysisView
+      name: 'WordCloudView',
+      component: wordCloudView
     },
     {
       path: '/chart',

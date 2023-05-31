@@ -1,21 +1,16 @@
 <template>
 <div>
-<el-container>
+  <NavMenu></NavMenu>
+<el-container >
   <el-header>
-    <div class="caption-title">
-      <i class="fl"><img src="../assets/images/title-left.png" alt=""></i>
-      <span class="biaoti fl" style="color: #000c3b">数据管理</span>
-      <i class="fr"><img src="../assets/images/title-right.png" alt=""></i>
+    <div style="text-align: center;font-size: 2rem;">
+        数据管理
     </div>
   </el-header>
-  <el-container style="height: 100%;">
-    <el-aside class="zhenwen">
+  <el-container style="height: 100%;margin-left: 5%;">
+    <el-aside class="zhenwen" style="width: 15%;">
       <div class="center_zs fl" style="width: 90%;">
         <div>
-          <i class="topL"></i>
-          <i class="topR"></i>
-          <i class="bottomL"></i>
-          <i class="bottomR"></i>
           <div class="data-title" style="background-color: transparent">
             <b class="data-title-left">[</b>
             <span>数据集
@@ -24,6 +19,11 @@
               </el-button>
             </span>
             <b class="data-title-right">]</b>
+            <span>获取数据
+            <el-button :circle="true" plain="plain" @click="spiderVisible = true">
+              <i class="el-icon-more"></i>
+            </el-button>
+            </span>
           </div>
           <div>
             <el-collapse>
@@ -46,8 +46,18 @@
                       <div>
                         {{item.name}}
                       </div>
-                      <el-button type="primary" size="mini" plain="plain" :circle="true" @click="getData(item.id);currentCollection=item.id"><i class="el-icon-s-operation" ></i></el-button>
-                    </div>
+                      <div>
+                        <el-popconfirm
+                          title="Are you sure to delete this?"
+                          @confirm="deleteCollection(item.id)"
+                        >
+                          <template #reference>
+                            <el-button type="danger" size="mini" plain="plain" :circle="true"><i class="el-icon-close"></i></el-button>
+                          </template>
+                        </el-popconfirm>
+                        <el-button type="primary" size="mini" plain="plain" :circle="true" @click="getData(item.id);currentCollection=item.id"><i class="el-icon-s-operation" ></i></el-button>
+                      </div>
+                      </div>
                   </template>
                   <div>
                     {{item.description}}
@@ -184,6 +194,29 @@
         </el-form-item>
       </el-form>
     </div>
+  </el-dialog>
+
+  <el-dialog title="获取数据"
+             :visible.sync="spiderVisible"
+             width="40%"
+             :before-close="handleClose"
+  >
+    <div style="width: 90%; margin: auto">
+      <el-form :model="spiderForm" :rules="spiderRules" ref="spiderForm">
+        <el-form-item label="项目名称：" prop="project">
+          <el-input v-model="spiderForm.project"></el-input>
+        </el-form-item>
+        <el-form-item label="版本号：" prop="version">
+          <el-input v-model="spiderForm.version"></el-input>
+        </el-form-item>
+        <el-form-item label="项目地址：" prop="web-address">
+          <el-input v-model="spiderForm['web-address']"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button :loading="isSpiderBusy" size="medium" style="width: 70px;height:30px; font-size: 0.6rem " plain="plain" @click="spider('spiderForm')">创建</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
 
   </el-dialog>
 </div>
@@ -192,14 +225,17 @@
 <script>
 import {
   addCollection,
-  addCollectionData,
+  addCollectionData, deleteCollection,
   listAllCollection,
   listAllData,
   listCollectionData
 } from '@/network/management'
+import axios from 'axios'
+import NavMenu from '@/components/NavMenu'
 
 export default {
   name: 'ManagementView',
+  components: {NavMenu},
   mounted () {
     listAllData({
       params: {
@@ -233,7 +269,10 @@ export default {
       currentPage: 0,
       currentCollection: -1,
       formVisible: false,
+      spiderVisible: false,
+      isSpiderBusy: false,
       collectionForm: {},
+      spiderForm: {},
       chosenCollection: '',
       chosenData: [],
       collectionList: [],
@@ -244,6 +283,17 @@ export default {
         name: [
           {required: true, message: '请输入名称', trigger: 'change'}
         ]
+      },
+      spiderRules: {
+        project: [
+          {required: true, message: '请输入项目名称', trigger: 'blur'}
+        ],
+        version: [
+          {required: true, message: '请输入版本号', trigger: 'blur'}
+        ],
+        'web-address': [
+          {required: true, message: '请输入地址', trigger: 'blur'}
+        ],
       }
     }
   },
@@ -279,6 +329,37 @@ export default {
           done()
         })
         .catch(_ => {})
+    },
+    spider (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.isSpiderBusy = true
+          let fd = new FormData()
+          fd.append('project', this.spiderForm.project)
+          fd.append('version', this.spiderForm.version)
+          fd.append('web-address', this.spiderForm['web-address'])
+          axios.post('http://124.70.198.102:5000/process', fd, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              'Access-Control-Allow-Origin': '*'
+            }
+          }).then(res => {
+            console.log(res.result)
+            if (res.status === 'success') {
+              this.$message.success('创建成功！')
+              this.formVisible = false
+              this.collectionForm = {}
+              this.refresh()
+            } else {
+              this.$message({
+                message: res.detail,
+                type: 'error'
+              })
+            }
+            this.isSpiderBusy = false
+          })
+        }
+      })
     },
     createCollection (formName) {
       this.$refs[formName].validate((valid) => {
@@ -317,6 +398,20 @@ export default {
         return it.id
       })
       console.log(this.chosenData)
+    },
+    deleteCollection (id) {
+      deleteCollection({
+        params: {
+          collectionId: id
+        }
+      }).then(res => {
+        if (res.code === 200) {
+        this.$message.success("删除成功")
+          this.refresh()
+      } else {
+        this.$message.error("删除失败")
+      }
+    })
     },
     getData (id) {
       console.log(id)

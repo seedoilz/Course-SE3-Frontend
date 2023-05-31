@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NavMenu></NavMenu>
     <h1>SentiStrength</h1>
     <el-checkbox-group
       v-model="optionsList"
@@ -111,6 +112,7 @@
 <script>
 import {analyzeText} from '@/network/main'
 import axios from 'axios'
+import NavMenu from '@/components/NavMenu'
 const optionsParam = ['noBoosters', 'noNegatingPositiveFlipsEmotion', 'noNegatingNegativeNeutralisesEmotion', 'noNegators', 'noIdioms',
   'questionsReduceNeg', 'noEmoticons', 'exclamations2', 'noMultiplePosWords', 'noMultipleNegWords', 'noIgnoreBoosterWordsAfterNegatives',
   'noDictionary', 'noDeleteExtraDuplicateLetters', 'noMultipleLetters', 'negatingWordsDontOccurBeforeSentiment', 'negatingWordsOccurAfterSentiment',
@@ -118,6 +120,7 @@ const optionsParam = ['noBoosters', 'noNegatingPositiveFlipsEmotion', 'noNegatin
 
 export default {
   name: 'MainView',
+  components: {NavMenu},
   data () {
     return {
       initCorpus: false,

@@ -6,6 +6,7 @@ const COLLECTION_LIST = '/collection/list'
 const COLLECTION_DATA = '/data/listDataByCollection'
 const COLLECTION_ADD = '/collection/add'
 const COLLECTION_DATA_ADD = '/collection/addToCollection'
+const COLLECTION_DELETE = '/collection/delete'
 const SENTI_TIME = '/data/listSentiDataByTime'
 const SENTI_VERSION = '/data/listSentiDataByVersion'
 const SENTI_USER = '/data/listSentiDataByUsername'
@@ -19,6 +20,7 @@ module.exports = {
   COLLECTION_DATA,
   COLLECTION_ADD,
   COLLECTION_DATA_ADD,
+  COLLECTION_DELETE,
   SENTI_TIME,
   SENTI_VERSION,
   SENTI_USER

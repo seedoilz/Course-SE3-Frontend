@@ -25,7 +25,17 @@ export default {
   methods: {
     showMultipleXAxesChart () {
       let chartDom = document.getElementById(this.head)
+      // let resizeMainContainer = function () {
+      //   chartDom.style.width = window.innerWidth * 0.7 + 'px'
+      //   chartDom.style.height = window.innerHeight * 0.5 + 'px'
+      // }
+      // resizeMainContainer()
+
       let myChart = echarts.init(chartDom)
+      window.onresize = () => {
+        // resizeMainContainer()
+        myChart.resize()
+      }
       let option
       console.log(this.axisName)
 

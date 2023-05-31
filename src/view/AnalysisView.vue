@@ -74,13 +74,14 @@
           <div class="ryclts">
             <div id="xjfxzt" style="height:100%; width:100%">
               <MultipleXAxes
-                             v-bind:x1="proportionX"
-                             v-bind:positive="proportionPositive"
-                             v-bind:negative="proportionNegative"
-                             v-bind:neutral="proportionNeutral"
-                             v-if="proportionNeutral.length > 0"
-                             txt="折线图中两条折线，分别积极情绪和消极情绪的占比，y轴为占比比例，x1轴为评论的时间"
-                             head="表1">
+                ref="proportion-chart"
+                v-bind:axisName="['positive', 'negative', 'neutral']"
+                v-bind:x1="proportionX"
+                v-bind:positive="proportionPositive"
+                v-bind:negative="proportionNegative"
+                v-bind:neutral="proportionNeutral"
+                txt="折线图中两条折线，分别积极情绪和消极情绪的占比，y轴为占比比例，x1轴为评论的时间"
+                head="表1">
               </MultipleXAxes>
             </div>
           </div>
@@ -114,15 +115,16 @@
           </div>
           <div class="ryclts">
             <div id="xjfxzt" >
-                  <MultipleXAxes
-                                 v-bind:x1="userSentimentX"
-                                 v-bind:positive="userPositiveScore"
-                                 v-bind:negative="userNegativeScore"
-                                 v-bind:neutral="userNeutralScore"
-                                 v-if="userSentimentX.length > 0"
-                                 txt="输入用户名，x1轴为用户评论时间，y轴为情绪值"
-                                 head="表2">
-                  </MultipleXAxes>
+              <MultipleXAxes
+                ref="user-chart"
+                v-bind:axisName="['positive', 'negative', 'overall']"
+                v-bind:x1="userSentimentX"
+                v-bind:positive="userPositiveScore"
+                v-bind:negative="userNegativeScore"
+                v-bind:neutral="userOverall"
+                txt="输入用户名，x1轴为用户评论时间，y轴为情绪值"
+                head="表2">
+              </MultipleXAxes>
             </div>
           </div>
         </div>
@@ -139,14 +141,14 @@
           </div>
           <div class="ryclts">
             <div id="xjfxzt">
-                  <BasicBar txt="x轴为不同版本，y轴为积极情绪和消极情绪的数量"
-                            head="表3"
-                            v-bind:positive="positiveQuantity"
-                            v-bind:negative="negativeQuantity"
-                            v-bind:neutral="neutralQuantity"
-                            v-bind:x="sentimentQuantityX"
-                            v-if="sentimentQuantityX.length > 0">
-                  </BasicBar>
+              <BasicBar txt="x轴为不同版本，y轴为积极情绪和消极情绪的数量"
+                        head="表3"
+                        ref="quantity-chart"
+                        v-bind:positive="positiveQuantity"
+                        v-bind:negative="negativeQuantity"
+                        v-bind:neutral="neutralQuantity"
+                        v-bind:x="sentimentQuantityX">
+              </BasicBar>
             </div>
           </div>
         </div>
@@ -242,6 +244,10 @@ export default {
         } else {
           console.log('proportion fail: ', response)
         }
+      }).then(() => {
+        setTimeout(() => {
+          this.$refs['proportion-chart'].showMultipleXAxesChart()
+        }, 500)
       })
 
       // 显示用户情绪图
@@ -270,6 +276,10 @@ export default {
         } else {
           console.log('username fail', res)
         }
+      }).then(() => {
+        setTimeout(() => {
+          this.$refs['user-chart'].showMultipleXAxesChart()
+        }, 500)
       })
 
       // 显示情绪数量图
@@ -300,6 +310,10 @@ export default {
         } else {
           console.log('project fail', res)
         }
+      }).then(() => {
+        setTimeout(() => {
+          this.$refs['quantity-chart'].showCountChart()
+        }, 500)
       })
     },
     updateChart () {
